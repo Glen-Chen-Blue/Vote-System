@@ -1,24 +1,19 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import SignIn from './component/SignIn';
+import VotingList from './component/VotingList';
+import Voting from './component/Voting';
+import CreateVote from './component/CreateVote';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<SignIn />} />
+        <Route path="/voting-list" element={<VotingList />} />
+        <Route path="/voting/:id" element={<Voting />} />
+        <Route path="/create-vote" element={<CreateVote />} />
+      </Routes>
+    </Router>
   );
 }
 
