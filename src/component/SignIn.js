@@ -1,12 +1,17 @@
-import React from 'react';
-import { Button, TextField, Grid, Paper, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { Button, TextField, Grid, Paper, Typography, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 function SignIn() {
   const navigate = useNavigate();
+  const [isLogin, setIsLogin] = useState(true);
 
   const handleLogin = () => {
     navigate('/voting-list');
+  };
+
+  const toggleForm = () => {
+    setIsLogin(!isLogin);
   };
 
   return (
@@ -14,13 +19,27 @@ function SignIn() {
       <Grid item xs={12} sm={8} md={6} lg={4}>
         <Paper style={{ padding: 20 }} elevation={5}>
           <Typography variant="h5" component="h2" align="center" gutterBottom>
-            Login
+            {isLogin ? 'Login' : 'Register'}
           </Typography>
-          <TextField label="Username" variant="outlined" fullWidth margin="normal" />
-          <TextField label="Password" variant="outlined" type="password" fullWidth margin="normal" />
+          {!isLogin && (
+            <>
+              <TextField label="Name" variant="outlined" fullWidth margin="normal" />
+              <TextField label="Age" variant="outlined" type="number" fullWidth margin="normal" />
+            </>
+          )}
+          {isLogin && (
+            <>
+              <TextField label="DID" variant="outlined" fullWidth margin="normal" />
+            </>
+          )}
           <Button variant="contained" color="primary" onClick={handleLogin} fullWidth>
-            Login
+            {isLogin ? 'Login' : 'Register'}
           </Button>
+          <Box mt={2} align="center">
+            <Button color="secondary" onClick={toggleForm}>
+              {isLogin ? 'Create Account' : 'Already have an account?'}
+            </Button>
+          </Box>
         </Paper>
       </Grid>
     </Grid>
