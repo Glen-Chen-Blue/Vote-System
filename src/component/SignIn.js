@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Button, TextField, Grid, Paper, Typography, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import {createIdentity} from './iota';
+// import { Storage } from '@mui/icons-material';
 
 function SignIn() {
   const navigate = useNavigate();
@@ -9,6 +11,9 @@ function SignIn() {
   const handleLogin = () => {
     navigate('/voting-list');
   };
+  const handleRegister = () => {
+    createIdentity();
+  }
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
@@ -32,9 +37,14 @@ function SignIn() {
               <TextField label="DID" variant="outlined" fullWidth margin="normal" />
             </>
           )}
+          {isLogin? 
           <Button variant="contained" color="primary" onClick={handleLogin} fullWidth>
-            {isLogin ? 'Login' : 'Register'}
+            'Login'
+          </Button>:
+          <Button variant="contained" color="primary" onClick={handleRegister} fullWidth>
+          'Register'
           </Button>
+          }
           <Box mt={2} align="center">
             <Button color="secondary" onClick={toggleForm}>
               {isLogin ? 'Create Account' : 'Already have an account?'}
