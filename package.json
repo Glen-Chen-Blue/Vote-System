@@ -1,0 +1,13 @@
+{
+    "name": "Vote System",
+    "version": "1.0.0",
+    "main": "index.js",
+    "repository": "https://github.com/ric2k1/pollen.ai.git",
+    "scripts": {
+      "start": "cd frontend && yarn start",
+      "server": "cd backend && yarn server",
+      "install":"cd frontend && yarn install && cd ../backend && yarn install"
+    },
+    "license": "MIT"
+  }
+  
