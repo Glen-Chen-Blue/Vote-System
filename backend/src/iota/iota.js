@@ -10,36 +10,78 @@ const identity = require('@iota/identity-wasm/node')
  * using the Account.
  */
 // async function createIdentity(storage?: Storage) {
-async function createIdentity(){
+// Copyright 2020-2022 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
 
-    // The creation step generates a keypair, builds an identity
-    // and publishes it to the IOTA mainnet.
-    const data = {
-        name:'test'
-    }
-    let builder = new identity.AccountBuilder(data);
+
+/**
+ This example shows how to create a Verifiable Credential and validate it.
+ In this example, alice takes the role of the subject, while we also have an issuer.
+ The issuer signs a UniversityDegreeCredential type verifiable credential with Alice's name and DID.
+ This Verifiable Credential can be verified by anyone, allowing Alice to take control of it and share it with whomever they please.
+ **/
+async function createVC() {
+    const builder = new identity.AccountBuilder();
+
+    // Create an identity for the issuer.
+    const issuer = await builder.createIdentity();
     console.log("test");
-    // const builder = new identity.AccountBuilder();
-    const account = await builder.createIdentity();
+    // Add verification method to the issuer.
+    await issuer.createMethod({
+        content: identity.MethodContent.GenerateEd25519(),
+        fragment: "#issuerKey"
+    })
+    console.log("test");
+    // Create an identity for the holder, in this case also the subject.
+    const alice = await builder.createIdentity();
 
-    // Retrieve the DID of the newly created identity.
-    const did = account.did();
-    
-    const document = account.document();
-    document.metadata('data', data);
-    const updatedDocument = await account.publish(document);
+    // Create a credential subject indicating the degree earned by Alice, linked to their DID.
+    const subject = {
+        id: alice.document().id(),
+        name: "Alice",
+        degreeName: "Bachelor of Science and Arts",
+        degreeType: "BachelorDegree",
+        GPA: "4.0"
+    };
 
-    // Print the DID of the created Identity.
-    console.log(did.toString())
+    // Create an unsigned `UniversityDegree` credential for Alice
+    const unsignedVc = new identity.Credential({
+        id: "https://example.edu/credentials/3732",
+        type: "UniversityDegreeCredential",
+        issuer: issuer.document().id(),
+        credentialSubject: subject
+    });
 
-    // Print the local state of the DID Document
-    console.log(account.document());
+    // Created a signed credential by the issuer.
+    const signedVc = await issuer.createSignedCredential(
+        "#issuerKey",
+        unsignedVc,
+        identity.ProofOptions.default(),
+    );
 
-    // Print the Explorer URL for the DID.
-    console.log(`Explorer Url:`, identity.ExplorerUrl.mainnet().resolverUrl(did));
+    // Before sending this credential to the holder the issuer wants to validate that some properties
+    // of the credential satisfy their expectations.
 
-    return did;
+
+    // Validate the credential's signature, the credential's semantic structure,
+    // check that the issuance date is not in the future and that the expiration date is not in the past.
+    identity.CredentialValidator.validate(
+        signedVc,
+        issuer.document(),
+        identity.CredentialValidationOptions.default(),
+        identity.FailFast.AllErrors
+    );
+
+    // Since `validate` did not throw any errors we know that the credential was successfully validated.
+    console.log(`VC successfully validated`);
+    console.log(alice.did());
+
+    // The issuer is now sure that the credential they are about to issue satisfies their expectations.
+    // The credential is then serialized to JSON and transmitted to the holder in a secure manner.
+    // Note that the credential is NOT published to the IOTA Tangle. It is sent and stored off-chain.
+    const credentialJSON = signedVc.toJSON();
+    console.log(credentialJSON);    
+    return {alice, issuer, credentialJSON};
 }
-
-createIdentity();
-// export { createIdentity };
+createVC();
+// export {createVC};
