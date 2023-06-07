@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Button, TextField, Grid, Paper, Typography, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import {createIdentity} from './iota';
-// import { Storage } from '@mui/icons-material';
 
 function SignIn() {
   const navigate = useNavigate();
@@ -12,7 +10,7 @@ function SignIn() {
     navigate('/voting-list');
   };
   const handleRegister = () => {
-    createIdentity();
+    // createIdentity();
   }
 
   const toggleForm = () => {
