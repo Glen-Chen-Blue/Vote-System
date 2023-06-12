@@ -1,6 +1,6 @@
 import { Client, hexToUtf8, initLogger, utf8ToHex } from "@iota/client";
 
-require("dotenv").config({ path: "../.env" });
+require("dotenv").config({ path: "../../../.env" });
 
 async function getVote(lastBlockID) {
   initLogger();
@@ -36,7 +36,7 @@ async function coutingVotes(choices, lastBlockID) {
   choices.map((choice) => (result[choice] = 0));
   do {
     const { blockID, choice } = await getVote(lastBlockID);
-    result[choice] += 0;
+    result[choice] += 1;
     lastBlockID = blockID;
   } while (lastBlockID);
   return result;

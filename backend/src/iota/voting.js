@@ -1,6 +1,6 @@
 import { Client, hexToUtf8, initLogger, utf8ToHex } from "@iota/client";
 
-require("dotenv").config({ path: "../.env" });
+require("dotenv").config({ path: "../../../.env" });
 
 async function voting(poll_ID, prevBlockID, choice) {
   initLogger();
@@ -34,6 +34,7 @@ async function voting(poll_ID, prevBlockID, choice) {
       secretManager,
       options
     );
+    return blockIdAndBlock[0];
     // console.log("Block:", blockIdAndBlock, "\n");
 
     // console.log(
