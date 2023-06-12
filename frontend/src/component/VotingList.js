@@ -44,19 +44,20 @@ function VotingList() {
       </Grid>
       <Grid item>
         <Tabs value={value} onChange={handleChange}>
-          <Tab label="Active Votes" />
-          <Tab label="Past Votes" />
+          <Tab label="Can Vote" />
+          <Tab label="Voted" />
+          <Tab label="End Vote" />
         </Tabs>
       </Grid>
       <Grid item>
-        {data
-          .filter((vote) => (value === 0 ? vote.active : !vote.active))
-          .map((vote) => (
-            <Paper
-              key={vote.id}
-              onClick={() => handleVoteClick(vote.id)}
-              sx={{ width: "60vw", mb: 1, p: 1, cursor: "pointer" }}
-            >
+      {data
+          .filter(vote => {
+              if (value === 0) return vote.active && !vote.voted;
+              else if (value === 1) return vote.voted;
+              else return !vote.active;
+          })
+          .map(vote => (
+            <Paper key={vote.id} onClick={() => handleVoteClick(vote.id)} sx={{ width: '60vw', mb: 1, p: 1, cursor: 'pointer' }}>
               <Typography variant="h6">{vote.title}</Typography>
               <Typography variant="body2">{vote.description}</Typography>
               <List>

@@ -1,18 +1,9 @@
 // Copyright 2020-2022 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-// import { AccountBuilder, ExplorerUrl, Storage } from '@iota/identity-wasm';
-const identity = require('@iota/identity-wasm/node')
+const identity = require('@iota/identity-wasm/node');
+// import {GetIssuer} from './issuer'
 // const storage = require("Storage")
-
-/**
- * This example shows a basic introduction on how to create a basic DID Document and upload it to the Tangle
- * using the Account.
- */
-// async function createIdentity(storage?: Storage) {
-// Copyright 2020-2022 IOTA Stiftung
-// SPDX-License-Identifier: Apache-2.0
-
 
 /**
  This example shows how to create a Verifiable Credential and validate it.
@@ -20,68 +11,112 @@ const identity = require('@iota/identity-wasm/node')
  The issuer signs a UniversityDegreeCredential type verifiable credential with Alice's name and DID.
  This Verifiable Credential can be verified by anyone, allowing Alice to take control of it and share it with whomever they please.
  **/
-async function createVC() {
+async function createVC(name, age) {
     const builder = new identity.AccountBuilder();
-
-    // Create an identity for the issuer.
     const issuer = await builder.createIdentity();
-    console.log("test");
-    // Add verification method to the issuer.
     await issuer.createMethod({
         content: identity.MethodContent.GenerateEd25519(),
         fragment: "#issuerKey"
     })
-    console.log("test");
-    // Create an identity for the holder, in this case also the subject.
-    const alice = await builder.createIdentity();
-
-    // Create a credential subject indicating the degree earned by Alice, linked to their DID.
+    const account = await builder.createIdentity();
     const subject = {
-        id: alice.document().id(),
-        name: "Alice",
-        degreeName: "Bachelor of Science and Arts",
-        degreeType: "BachelorDegree",
-        GPA: "4.0"
+        id: account.document().id(),
+        name: name,
+        age: age
     };
-
-    // Create an unsigned `UniversityDegree` credential for Alice
     const unsignedVc = new identity.Credential({
         id: "https://example.edu/credentials/3732",
-        type: "UniversityDegreeCredential",
+        type: "VoteCredential",
         issuer: issuer.document().id(),
         credentialSubject: subject
     });
-
-    // Created a signed credential by the issuer.
     const signedVc = await issuer.createSignedCredential(
         "#issuerKey",
         unsignedVc,
         identity.ProofOptions.default(),
     );
-
-    // Before sending this credential to the holder the issuer wants to validate that some properties
-    // of the credential satisfy their expectations.
-
-
-    // Validate the credential's signature, the credential's semantic structure,
-    // check that the issuance date is not in the future and that the expiration date is not in the past.
     identity.CredentialValidator.validate(
         signedVc,
         issuer.document(),
         identity.CredentialValidationOptions.default(),
         identity.FailFast.AllErrors
     );
-
-    // Since `validate` did not throw any errors we know that the credential was successfully validated.
     console.log(`VC successfully validated`);
-    console.log(alice.did());
-
-    // The issuer is now sure that the credential they are about to issue satisfies their expectations.
-    // The credential is then serialized to JSON and transmitted to the holder in a secure manner.
-    // Note that the credential is NOT published to the IOTA Tangle. It is sent and stored off-chain.
     const credentialJSON = signedVc.toJSON();
     console.log(credentialJSON);    
-    return {alice, issuer, credentialJSON};
+    return credentialJSON;
 }
-createVC();
-// export {createVC};
+async function login(VC){
+    try{
+        const builder = new identity.AccountBuilder();
+        
+        // const did = identity.DID.parse(VC.credentialSubject.id);
+        const account = await builder.createIdentity();
+        await account.createMethod({
+            content: identity.MethodContent.GenerateEd25519(),
+            fragment: "#accountKey"
+        })
+        const receivedVc=identity.Credential.fromJSON(VC);
+        console.log(receivedVc)
+        const unsignedVp = new identity.Presentation({
+            holder: account.did(),
+            verifiableCredential: receivedVc
+        })
+        
+
+        const challenge = "475a7984-1bb5-4c4c-a56f-822bccd46440";
+        const expires = identity.Timestamp.nowUTC().checkedAdd(identity.Duration.minutes(10));
+
+        const signedVp = await account.createSignedPresentation(
+            "#accountKey",
+            unsignedVp,
+            new identity.ProofOptions({
+                challenge: challenge,
+                expires
+            })
+        );
+
+        const signedVpJSON = signedVp.toJSON();
+
+        const presentation = identity.Presentation.fromJSON(signedVpJSON);
+
+        const presentationVerifierOptions = new identity.VerifierOptions({
+            challenge: challenge,
+            allowExpired: false,
+        });
+
+        // Declare that any credential contained in the presentation are not allowed to expire within the next 10 hours:
+        const earliestExpiryDate = identity.Timestamp.nowUTC().checkedAdd(identity.Duration.hours(10));
+        const credentialValidationOptions = new identity.CredentialValidationOptions({
+            earliestExpiryDate: earliestExpiryDate,
+        });
+
+        // Declare that the presentation holder's DID must match the subject ID on all credentials in the presentation.
+        const subjectHolderRelationship = identity.SubjectHolderRelationship.AlwaysSubject;
+
+        const presentationValidationOptions = new identity.PresentationValidationOptions({
+            sharedValidationOptions: credentialValidationOptions,
+            presentationVerifierOptions: presentationVerifierOptions,
+            subjectHolderRelationship: subjectHolderRelationship,
+        });
+
+        // In order to validate presentations and credentials one needs to resolve the DID Documents of
+        // the presentation holder and of credential issuers. This is something the `Resolver` can help with.
+        const resolver = new identity.Resolver();
+
+        // Validate the presentation and all the credentials included in it according to the validation options
+        await resolver.verifyPresentation(
+            presentation,
+            presentationValidationOptions,
+            identity.FailFast.FirstError
+        );
+
+        // Since no errors were thrown by `verifyPresentation` we know that the validation was successful.
+        console.log(`VP successfully validated`);
+        return true;
+    } catch (error) {
+        console.log(error)
+        return false;
+    }
+}
+export {createVC, login};
