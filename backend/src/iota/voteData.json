@@ -1,0 +1,7 @@
+{
+  "data": {
+    "poll_ID": "VOTING_ID in string",
+    "prevID": "Previous vote's ID in string. Set to undeifind to the first one",
+    "vote": "choices in int"
+  }
+}
