@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 const identity = require('@iota/identity-wasm/node');
+const builder = new identity.AccountBuilder();
+const issuer = await builder.createIdentity();
 // import {GetIssuer} from './issuer'
 // const storage = require("Storage")
 
@@ -12,15 +14,16 @@ const identity = require('@iota/identity-wasm/node');
  This Verifiable Credential can be verified by anyone, allowing Alice to take control of it and share it with whomever they please.
  **/
 async function createVC(name, age) {
-    const builder = new identity.AccountBuilder();
+    
     // const issuer = GetIssuer()
 
     // Create an identity for the issuer.
-    const issuer = await builder.createIdentity();
+    
     // Add verification method to the issuer.
+    fragment = Math.random().toString(36)+"Key";
     await issuer.createMethod({
         content: identity.MethodContent.GenerateEd25519(),
-        fragment: "#issuerKey"
+        fragment: fragment
     })
     // Create an identity for the holder, in this case also the subject.
     const account = await builder.createIdentity();
@@ -29,7 +32,8 @@ async function createVC(name, age) {
     const subject = {
         id: account.document().id(),
         name: name,
-        age: age
+        age: age,
+        issuerKey: fragment
     };
 
     // Create an unsigned `UniversityDegree` credential for Alice
@@ -73,12 +77,12 @@ async function createVC(name, age) {
 }
 async function login(VC){
 
-    const builder = new identity.AccountBuilder();
-    const did = identity.DID.parse(VC.credentialSubject.id);
-    const account = await builder.loadIdentity(did);
+    // const builder = new identity.AccountBuilder();
+    // const did = identity.DID.parse(VC.credentialSubject.id);
+    const account = await builder.createIdentity();
     await account.createMethod({
         content: identity.MethodContent.GenerateEd25519(),
-        fragment: "accountKey"
+        fragment: "#accountKey"
     })
     const unsignedVp = new identity.Presentation({
         holder: account.did(),
@@ -107,7 +111,7 @@ async function login(VC){
     });
 
     // Declare that any credential contained in the presentation are not allowed to expire within the next 10 hours:
-    const earliestExpiryDate = identity.Timestamp.nowUTC().checkedAdd(Duration.hours(10));
+    const earliestExpiryDate = identity.Timestamp.nowUTC().checkedAdd(identity.Duration.hours(10));
     const credentialValidationOptions = new identity.CredentialValidationOptions({
         earliestExpiryDate: earliestExpiryDate,
     });
@@ -126,14 +130,23 @@ async function login(VC){
     const resolver = new identity.Resolver();
 
     // Validate the presentation and all the credentials included in it according to the validation options
-    await resolver.verifyPresentation(
-        presentation,
-        presentationValidationOptions,
-        FailFast.FirstError
-    );
+    try{
+        await resolver.verifyPresentation(
+            presentation,
+            presentationValidationOptions,
+            identity.FailFast.FirstError
+        );
+        console.log(`VP successfully validated`);
+    }
+    catch(e){
+        console.log("The account have already voted");
+    }
 
     // Since no errors were thrown by `verifyPresentation` we know that the validation was successful.
-    console.log(`VP successfully validated`);
+    // console.log(`VP successfully validated`);
 
 }
+// const vote = async(VC) => {
+
+// }
 export {createVC, login};
