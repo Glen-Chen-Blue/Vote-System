@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, TextField, Box, Paper, Typography, Grid, IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 
 function CreateVote() {
   const navigate = useNavigate();
@@ -21,6 +22,10 @@ function CreateVote() {
 
   const handleAddOption = () => {
     setOptions([...options, ""]);
+  };
+
+  const handleRemoveOption = (index) => {
+    setOptions(options.filter((_, optionIndex) => optionIndex !== index));
   };
 
   const handleOptionChange = (event, index) => {
@@ -46,15 +51,23 @@ function CreateVote() {
             <TextField fullWidth label="Vote Title" variant="outlined" />
             <TextField fullWidth label="Vote Content" variant="outlined" multiline sx={{ mt: 2 }}/>
             {options.map((option, index) => (
-              <TextField
-                fullWidth
-                key={index}
-                label={`Option ${index + 1}`}
-                variant="outlined"
-                value={option}
-                onChange={(event) => handleOptionChange(event, index)}
-                sx={{ mt: 2 }}
-              />
+              <Box display="flex" alignItems="center" sx={{ mt: 2 }} key={index}>
+                <TextField
+                  fullWidth
+                  label={`Option ${index + 1}`}
+                  variant="outlined"
+                  value={option}
+                  onChange={(event) => handleOptionChange(event, index)}
+                />
+                <IconButton
+                  color="secondary"
+                  onClick={() => handleRemoveOption(index)}
+                  disabled={options.length === 1}
+                  sx={{ ml: 2 }}
+                >
+                  <RemoveCircleOutlineIcon />
+                </IconButton>
+              </Box>
             ))}
             <IconButton color="primary" onClick={handleAddOption}>
               <AddCircleOutlineIcon />
