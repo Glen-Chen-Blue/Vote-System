@@ -1,8 +1,17 @@
-import React from 'react';
-import { Button, Tabs, Tab, Paper, Typography, List, ListItem, ListItemText, Grid } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import data from './data'
-
+import React from "react";
+import {
+  Button,
+  Tabs,
+  Tab,
+  Paper,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  Grid,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import data from "./data";
 
 function VotingList() {
   const navigate = useNavigate();
@@ -12,11 +21,11 @@ function VotingList() {
   };
 
   const handleLogout = () => {
-    navigate('/');
+    navigate("/");
   };
 
   const handleCreate = () => {
-    navigate('/create-vote');
+    navigate("/create-vote");
   };
 
   const handleVoteClick = (id) => {
@@ -24,7 +33,7 @@ function VotingList() {
   };
 
   return (
-    <Grid container direction="column" alignItems="center" spacing={2} >
+    <Grid container direction="column" alignItems="center" spacing={2}>
       <Grid item>
         <Button variant="contained" color="secondary" onClick={handleLogout}>
           Logout
@@ -35,13 +44,18 @@ function VotingList() {
       </Grid>
       <Grid item>
         <Tabs value={value} onChange={handleChange}>
-          <Tab label="Active Votes" />
-          <Tab label="Past Votes" />
+          <Tab label="Can Vote" />
+          <Tab label="Voted" />
+          <Tab label="End Vote" />
         </Tabs>
       </Grid>
       <Grid item>
       {data
-          .filter(vote => (value === 0 ? vote.active : !vote.active))
+          .filter(vote => {
+              if (value === 0) return vote.active && !vote.voted;
+              else if (value === 1) return vote.voted;
+              else return !vote.active;
+          })
           .map(vote => (
             <Paper key={vote.id} onClick={() => handleVoteClick(vote.id)} sx={{ width: '60vw', mb: 1, p: 1, cursor: 'pointer' }}>
               <Typography variant="h6">{vote.title}</Typography>
@@ -49,7 +63,10 @@ function VotingList() {
               <List>
                 {vote.options.map((option, index) => (
                   <ListItem key={index}>
-                    <ListItemText>{option.option}{vote.active?"":":"+option.votes}</ListItemText>
+                    <ListItemText>
+                      {option.option}
+                      {vote.active ? "" : ":" + option.votes}
+                    </ListItemText>
                   </ListItem>
                 ))}
               </List>

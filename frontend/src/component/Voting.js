@@ -27,20 +27,20 @@ function Voting() {
                 Back to list
             </Button>
         </Grid>
-      <Grid item>
+        <Grid item>
         <Paper sx={{ p: 2,width: '60vw' }}>
           <Typography variant="h6">{vote.title}</Typography>
           <Typography variant="body2">{vote.description}</Typography>
           <List>
-            {vote.options.map((option, index) => (
+          {vote.options.map((option, index) => (
               <ListItem key={index}>
                 <ListItemText>
                   {option.option}
-                  {vote.active ? (
+                  {!vote.voted && vote.active ? (
                     <Button variant="contained" color="primary">
                       Vote
                     </Button>
-                  ) : (
+                  ) : vote.active ? null : (
                     ` - ${option.votes} votes`
                   )}
                 </ListItemText>
