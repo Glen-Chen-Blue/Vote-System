@@ -1,9 +1,8 @@
 import { Client, hexToUtf8, initLogger, utf8ToHex } from "@iota/client";
-
+import { getPoll } from "../data";
 require("dotenv").config({ path: "../../../.env" });
 
 async function getVote(lastBlockID) {
-  initLogger();
   if (!process.env.NODE_URL) {
     throw new Error(".env NODE_URL is undefined, see .env.example");
   }
@@ -31,14 +30,24 @@ async function getVote(lastBlockID) {
   }
 }
 
-async function coutingVotes(choices, lastBlockID) {
+async function coutingVotes(poll_ID) {
+  const poll = getPoll(poll_ID);
   const result = {};
+  const choices = poll.options;
+  let lastBlockID = poll.lastBlockID;
   choices.map((choice) => (result[choice] = 0));
+  console.log(lastBlockID);
   do {
     const { blockID, choice } = await getVote(lastBlockID);
+    while ((!blockID && blockID !== 0) || !choice) {
+      let i = 1;
+      console.log(blockID, choice);
+    }
+    console.log("vote for: ", choice);
     result[choice] += 1;
     lastBlockID = blockID;
-  } while (lastBlockID);
+  } while (lastBlockID !== 0);
+  console.log("voting result:", result);
   return result;
 }
 // run().then(() => process.exit());
