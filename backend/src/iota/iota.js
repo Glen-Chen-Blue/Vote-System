@@ -1,6 +1,6 @@
 // Copyright 2020-2022 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
-
+import { getIssuer } from './issuer';
 const identity = require('@iota/identity-wasm/node');
 // import {GetIssuer} from './issuer'
 // const storage = require("Storage")
@@ -13,7 +13,8 @@ const identity = require('@iota/identity-wasm/node');
  **/
 async function createVC(name, age) {
     const builder = new identity.AccountBuilder();
-    const issuer = await builder.createIdentity();
+    const issuer = getIssuer();
+    console.log(issuer)
     await issuer.createMethod({
         content: identity.MethodContent.GenerateEd25519(),
         fragment: "#issuerKey"
