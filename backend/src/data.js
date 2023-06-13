@@ -39,4 +39,11 @@ function getPoll(poll_ID) {
   return polls.filter((d) => d.id === poll_ID)[0];
 }
 
-export { createPoll, modifyLastID, getPoll };
+function endPoll(poll_ID) {
+  polls = polls.map((d) => {
+    d.id === poll_ID ? (d.active = false) : (d.active = d.active);
+    return d;
+  });
+}
+
+export { createPoll, modifyLastID, getPoll, endPoll };
