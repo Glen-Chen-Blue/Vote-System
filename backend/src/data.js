@@ -1,3 +1,5 @@
+import coutingVotes from "./iota/coutingVotes";
+
 let polls = [
   // {
   //   id: 1,
@@ -10,19 +12,29 @@ let polls = [
   // },
 ];
 
+let latestEnd = {
+  latestID: 0,
+  latestTime: 1000000000000000,
+};
+
 function createPoll(title, description, options, endTime) {
-  const time=new Date(endTime)
   const newPoll = {
     id: "POLL_" + polls.length.toString() + title + "_",
     title,
     description,
     options,
     active: true,
-    time,
+    endTime,
     lastBlockID: 0,
   };
   polls.push(newPoll);
-  console.log(polls)
+  console.log(polls);
+  if (latestEnd.latestTime > new Date(endTime)) {
+    latestEnd = {
+      latestID: newPoll.id,
+      latestTime: endTime,
+    };
+  }
   return newPoll.id;
 }
 
@@ -45,4 +57,47 @@ function getAllPoll() {
   return polls;
 }
 
-export { createPoll, modifyLastID, getPoll, getAllPoll };
+function getLatest() {
+  return latestEnd;
+}
+
+function initializeLatest() {
+  latestEnd.latestTime = 1000000000000000;
+  polls.forEach((poll) => {
+    if (poll.active) {
+      if (latestTime > new Date(poll.endTime)) {
+        latestEnd.latestID = poll.poll_ID;
+        latestEnd.latestTime = new Date(poll.endTime);
+      }
+    }
+  });
+}
+
+async function endPoll() {
+  // while (true) {
+  //   console.log("currentTime:", new Date());
+  //   setTimeout(endPoll(), 1000);
+  // }
+  let currentTime = new Date();
+  if (latestEnd.latestTime < currentTime) {
+    let result = await coutingVotes(latestEnd.latestID);
+    polls = polls.map((d) => {
+      if (d.id === poll_ID) {
+        d.options = result;
+        d.active = false;
+      }
+      return d;
+    });
+    initializeLatest();
+  }
+  // await sleep(1000);
+}
+export {
+  createPoll,
+  modifyLastID,
+  getPoll,
+  getAllPoll,
+  getLatest,
+  initializeLatest,
+  endPoll,
+};
