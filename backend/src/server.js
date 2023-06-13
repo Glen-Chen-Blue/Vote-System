@@ -17,35 +17,51 @@ import {
 // import { Tag } from "@iota/core";
 require("dotenv").config({ path: "../.env" });
 async function testVoting() {
-  // console.log("start voting");
-  // const poll = getPoll("POLL_1VOTING_");
-  // console.log(poll.lastBlockID);
-  // await voting("POLL_1VOTING_", "a");
-  // await voting("POLL_1VOTING_", "b");
-  // await voting("POLL_1VOTING_", "a");
-  // await voting("POLL_1VOTING_", "a");
-  // await voting("POLL_1VOTING_", "b");
-  // await voting("POLL_1VOTING_", "a");
-  // console.log("start counting");
-  // await counting("POLL_1VOTING_");
-  // console.log(getPoll("POLL_1VOTING_"));
   let poll_ID = createPoll(
-    "TEST1",
-    "======",
-    ["yes", "no"],
-    "2023-06-14T04:17:30"
+    "DESSERT",
+    "Which dessert below do you like the most?",
+    ["Scone", "Madeleine", "Kerilu", "Cheese Cake", "I don't like desserts."],
+    "2023-06-14T16:00"
   );
-  await voting(poll_ID, { option: "yes", vote: -1 });
-  await voting(poll_ID, { option: "no", vote: -1 });
-  await voting(poll_ID, { option: "yes", vote: -1 });
-  await voting(poll_ID, { option: "yes", vote: -1 });
+  await voting(poll_ID, { option: "Madeleine", vote: -1 });
+  await voting(poll_ID, { option: "Scone", vote: -1 });
+  await voting(poll_ID, { option: "Kerilu", vote: -1 });
+  await voting(poll_ID, { option: "Kerilu", vote: -1 });
+  await voting(poll_ID, { option: "Cheese Cake", vote: -1 });
+  await voting(poll_ID, { option: "Kerilu", vote: -1 });
+  await voting(poll_ID, { option: "I don't like desserts.", vote: -1 });
+  await voting(poll_ID, { option: "Madeleine", vote: -1 });
+  await voting(poll_ID, { option: "Kerilu", vote: -1 });
+  await voting(poll_ID, { option: "Cheese Cake", vote: -1 });
+  await voting(poll_ID, { option: "Scone", vote: -1 });
+  await voting(poll_ID, { option: "Scone", vote: -1 });
+
   // await counting(poll_ID);
   // console.log(getPoll(poll_ID));
-  poll_ID = createPoll("TEST2", "======", ["yes", "no"], "2023-06-14T04:17:30");
-  await voting(poll_ID, { option: "yes", vote: -1 });
-  await voting(poll_ID, { option: "no", vote: -1 });
-  await voting(poll_ID, { option: "yes", vote: -1 });
-  await voting(poll_ID, { option: "yes", vote: -1 });
+  poll_ID = createPoll(
+    "EE SUBJECT",
+    "Which subject below is your least favorite?",
+    [
+      "Electromagnetism",
+      "Electronics",
+      "Probability And Statistics",
+      "Logic Circuit",
+      "Programing",
+      "Signal And Systems",
+      "General Physics",
+      "Calculus",
+      "I hate all of them",
+      "I like all of them. I am a good EE student.",
+    ],
+    "2023-06-14T16:00"
+  );
+  await voting(poll_ID, { option: "Electronics", vote: -1 });
+  await voting(poll_ID, { option: "Electromagnetism", vote: -1 });
+  await voting(poll_ID, { option: "Electronics", vote: -1 });
+  await voting(poll_ID, { option: "Electronics", vote: -1 });
+  await voting(poll_ID, { option: "Electromagnetism", vote: -1 });
+  await voting(poll_ID, { option: "Electronics", vote: -1 });
+  await voting(poll_ID, { option: "I hate all of them", vote: -1 });
 }
 // const polls = getAllPoll();
 

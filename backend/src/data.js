@@ -2,29 +2,16 @@ import coutingVotes from "./iota/coutingVotes";
 
 let polls = [
   {
-    id: "POLL_0END_",
-    title: "END",
-    description: "jjjjj",
+    id: "POLL_0PresidentOfDepartment_",
+    title: "DEPARTMENT PRESIDENT",
+    description: "Choose next year's EE Department President",
     options: [
-      { option: "a", votes: 3 },
-      { option: "b", votes: 4 },
+      { option: "TSAI", votes: 97 },
+      { option: "LEE", votes: 103 },
     ],
     active: false,
-    endTime: "2023-06-13T19:05",
+    endTime: "2023-05-24T19:00",
     lastBlockID: 0,
-  },
-  {
-    id: "POLL_1VOTING_",
-    title: "END",
-    description: "jjjjj",
-    options: [
-      { option: "a", votes: 1 },
-      { option: "b", votes: 4 },
-    ],
-    active: true,
-    endTime: "2023-06-14T15:00",
-    lastBlockID:
-      "0x686f72a90cf9c88dda514af97f1486d28aa05d4978eabfe43d00eeef888f0726",
   },
 ];
 
