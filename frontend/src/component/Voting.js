@@ -7,7 +7,7 @@ import Logout from './logout';
 
 function Voting() {
   const navigate = useNavigate();
-  const { setVc, setIsLogin } = UseContext();
+  const { setVc, setIsLogin, vc } = UseContext();
   const [voteData, setVoteData] = React.useState({});
   const { id } = useParams();
 
@@ -28,9 +28,20 @@ function Voting() {
     const formData = new FormData();
     formData.append('poll_ID', poll_ID);
     formData.append('choice', choice);
+    formData.append('vc', vc);
     const response = await axios.post('/api/voting', formData);
-    console.log(response.data);
-    navigate('/voting-list');
+    if(response == 'voted'){
+      console.log('voted');
+    }
+    else if(response == 'error'){
+      console.log('error');
+    }
+    else{
+      setVc(JSON.stringify(response.data));
+      navigate('/voting-list');
+    }
+
+    
   };
 
 

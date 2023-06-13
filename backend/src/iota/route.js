@@ -2,9 +2,10 @@ import express from 'express'
 const multer = require('multer');
 const upload = multer();
 
-import {createVC, login} from './iota'
+import {createVC, login, setNewVc} from './iota'
 import {createPoll, modifyLastID, getPoll, getAllPoll} from '../data'
 import voting from './voting'
+import { ProofOptions } from '@iota/identity-wasm/node';
 const router = express.Router()
 
 router.post('/api/login', upload.none(),async (req, res) => {
@@ -47,8 +48,39 @@ router.get('/api/getPoll/:id', upload.none(),async (req, res) => {
 router.post('/api/voting', upload.none(),async (req, res) => {
   const poll_ID = req.body.poll_ID;
   const choice = req.body.choice;
-  const response =await voting(poll_ID,choice);
-  res.json(response);
+  const vc = JSON.parse(req.body.vc).vc;
+  console.log(vc.credentialSubject)
+  const votedlist = vc.credentialSubject.voted;
+  const voteYet = votedlist.filter(vote => {
+    if(vote == poll_ID){
+      return vote
+    }
+  });
+  console.log(voteYet);
+  if(voteYet.length != 1){
+    console.log("start voting")
+    const response =await voting(poll_ID,choice);
+    if(response == 'success'){
+      console.log("vote success")
+      const newVc = await setNewVc(poll_ID, vc);
+      const output = {
+        vc:newVc,
+        privateKey:JSON.parse(req.body.vc).privateKey
+      }
+      console.log(output);
+      res.json(output);
+    }
+    else{
+      //set error
+      res.json('error');
+    }
+  }
+  else{
+    //have voted 
+    console.log("have voted");
+    res.json('voted');
+  }
+  
 });
 
 

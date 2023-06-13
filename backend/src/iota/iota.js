@@ -23,20 +23,17 @@ const identity = require('@iota/identity-wasm/node');
 async function createVC(name, age) {
     const builder = new identity.AccountBuilder();
     const issuer = getIssuer();
-    const fragment = Math.random().toString(36).slice(-12);
-    // const fragment = "testkey"
+    // const fragment = Math.random().toString(36).slice(-12);
+
+    const fragment = "#issuerKey"
     console.log(fragment)
-    await issuer.createMethod({
-        content: identity.MethodContent.GenerateEd25519(),
-        fragment: fragment
-    })
     const account = await builder.createIdentity();
     const subject = {
         id: account.document().id(),
         name: name,
         age: age,
         issuerKey: fragment,
-        DidUrl: identity.ExplorerUrl.mainnet().resolverUrl(account.did())
+        voted: []
     };
     const unsignedVc = new identity.Credential({
         id: "https://example.edu/credentials/3732",
@@ -160,4 +157,36 @@ async function login(privateKey, VC){
         return false;
     }
 }
-export {createVC, login};
+async function setNewVc(poll_ID, vc){
+    vc.credentialSubject.voted.push(poll_ID);
+    console.log(vc.credentialSubject.voted);
+    const issuer = getIssuer();
+    const subject = {
+        id: vc.credentialSubject.id,
+        name: vc.credentialSubject.name,
+        age: vc.credentialSubject.age,
+        issuerKey: vc.credentialSubject.issuerKey,
+        voted: vc.credentialSubject.voted
+    };
+    console.log(subject)
+    const unsignedVc = new identity.Credential({
+        id: "https://example.edu/credentials/3732",
+        type: "VoteCredential",
+        issuer: issuer.document().id(),
+        credentialSubject: subject
+    });
+    const signedVc = await issuer.createSignedCredential(
+        "#issuerKey",
+        unsignedVc,
+        identity.ProofOptions.default(),
+    );
+    identity.CredentialValidator.validate(
+        signedVc,
+        issuer.document(),
+        identity.CredentialValidationOptions.default(),
+        identity.FailFast.AllErrors
+    );
+    console.log(`VC successfully validated`);
+    return signedVc
+}
+export {createVC, login, setNewVc};
