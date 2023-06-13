@@ -53,7 +53,7 @@ function Voting() {
       </Grid>
       <Grid item>
         <Paper sx={{ p: 5, width: '50vw', borderRadius:5 }}>
-          <Typography style={{ fontWeight:600 }} variant="h6">{voteData.title}</Typography>
+          <Typography style={{ fontWeight:600, fontSize:'25px' }} variant="h6">{voteData.title}</Typography>
           <Typography variant="body2">{voteData.description}</Typography>
           <hr style={{ borderColor:'black', borderWidth:'0.5px' }}></hr>
           <List>
@@ -63,7 +63,7 @@ function Voting() {
                   <ListItemText>
                     {option}
                     {currentTime < new Date(voteData.time) && !JSON.parse(vc).vc.credentialSubject.voted.includes(voteData.id) ? (
-                      <Button variant="contained" color="primary" onClick={()=>handleVoting(id,option)}>
+                      <Button style={{ marginLeft:'1rem', backgroundColor:'black'}} variant="contained" color="primary" onClick={()=>handleVoting(id,option)}>
                         Vote
                       </Button>
                     ) : voteData.active ? null : (
@@ -73,6 +73,7 @@ function Voting() {
                 </ListItem>
               ))}
           </List>
+          <hr style={{ borderColor:'black', borderWidth:'0.5px' }}></hr>
           <Typography variant="body2">End Time: {formattedTime}</Typography>
         </Paper>
       </Grid>

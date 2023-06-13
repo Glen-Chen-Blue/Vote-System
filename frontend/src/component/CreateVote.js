@@ -61,16 +61,13 @@ function CreateVote() {
   };
 
   return (
-    <Grid container direction="column" alignItems="center" spacing={2}>
-      <Grid item>
+    <Grid style={{ backgroundColor: 'black', minHeight: '100vh'}} container direction="column" alignItems="center">
+      <Grid style={{ width:'100%', display:'flex', justifyContent:'flex-end', padding:'2rem' }} item>
         <Logout/>
-        <Button variant="contained" color="primary" onClick={handleCancel}>
-          Back to list
-        </Button>
       </Grid>
       <Grid item>
-        <Paper sx={{ p: 2, width: '90vw' }}>
-          <Typography variant="h6">Create New Vote</Typography>
+        <Paper sx={{ p: 5, width: '50vw', borderRadius:5 }}>
+          <Typography style={{ fontWeight:600, fontSize:'25px' }} variant="h6">Create New Vote</Typography>
           <Box mt={2}>
             <TextField
               fullWidth
@@ -98,7 +95,7 @@ function CreateVote() {
                   onChange={(event) => handleOptionChange(event, index)}
                 />
                 <IconButton
-                  color="secondary"
+                  color="black"
                   onClick={() => handleRemoveOption(index)}
                   disabled={options.length === 1}
                   sx={{ ml: 2 }}
@@ -107,7 +104,7 @@ function CreateVote() {
                 </IconButton>
               </Box>
             ))}
-            <IconButton color="primary" onClick={handleAddOption}>
+            <IconButton color="black" onClick={handleAddOption}>
               <AddCircleOutlineIcon />
             </IconButton>
             <TextField
@@ -123,15 +120,20 @@ function CreateVote() {
               onChange={(event) => setEndtime(event.target.value)}
             />
             <Box mt={2}>
-              <Button variant="contained" color="primary" onClick={handleCreate}>
+              <Button style={{ marginLeft:'0rem', backgroundColor:'black'}} variant="contained" color="primary" onClick={handleCreate}>
                 Create Vote
               </Button>
-              <Button variant="contained" onClick={handleCancel} sx={{ ml: 2 }}>
+              <Button style={{ marginLeft:'1rem', backgroundColor:'black'}} variant="contained" onClick={handleCancel} sx={{ ml: 2 }}>
                 Cancel
               </Button>
             </Box>
           </Box>
         </Paper>
+      </Grid>
+      <Grid style={{ padding:'3rem' }} item>
+        <Button style={{ backgroundColor:'white', color:'black', borderRadius:10 }} variant="contained" color="primary" onClick={handleCancel}>
+          Back to list
+        </Button>
       </Grid>
     </Grid>
   );
