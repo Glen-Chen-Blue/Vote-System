@@ -13,7 +13,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { UseContext } from "../hook/useStatus";
 import axios from "axios";
-
+import Logout from "./logout";
 function VotingList() {
   const navigate = useNavigate();
   const [value, setValue] = useState(0);
@@ -33,12 +33,6 @@ function VotingList() {
     setValue(newValue);
   };
 
-  const handleLogout = () => {
-    setIsLogin(0);
-    setVc('');
-    navigate("/");
-  };
-
   const handleCreate = () => {
     navigate("/create-vote");
   };
@@ -50,9 +44,7 @@ function VotingList() {
   return (
     <Grid container direction="column" alignItems="center" spacing={2}>
       <Grid item>
-        <Button variant="contained" color="secondary" onClick={handleLogout}>
-          Logout
-        </Button>
+        <Logout/>
         <Button variant="contained" color="primary" onClick={handleCreate}>
           Create Vote
         </Button>

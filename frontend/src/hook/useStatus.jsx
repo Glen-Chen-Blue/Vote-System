@@ -22,7 +22,7 @@ const ContextProvider = (props) => {
         <Context.Provider
             value={{
               isLogin,setIsLogin,
-              vc,setVc
+              vc,setVc,
             }}
             {...props}
         />

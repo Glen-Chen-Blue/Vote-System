@@ -3,6 +3,7 @@ import { Button, Paper, Typography, List, ListItem, ListItemText, Grid } from '@
 import { useNavigate, useParams } from 'react-router-dom';
 import { UseContext } from '../hook/useStatus';
 import axios from 'axios';
+import Logout from './logout';
 
 function Voting() {
   const navigate = useNavigate();
@@ -32,21 +33,11 @@ function Voting() {
     navigate('/voting-list');
   };
 
-  const handleLogout = () => {
-    setIsLogin(0);
-    setVc('');
-    navigate('/');
-  };
-
-  const dateTime = new Date(voteData.time);
-  const formattedTime = dateTime.toLocaleString();
 
   return (
     <Grid container direction="column" alignItems="center" spacing={2}>
       <Grid item>
-        <Button variant="contained" color="secondary" onClick={handleLogout}>
-          Logout
-        </Button>
+        <Logout/>
         <Button variant="contained" color="primary" onClick={handleBack}>
           Back to list
         </Button>

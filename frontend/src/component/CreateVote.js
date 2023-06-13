@@ -5,6 +5,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import axios from 'axios';
 import { UseContext } from '../hook/useStatus';
+import Logout from './logout';
 axios.defaults.baseURL = 'http://localhost:4000';
 
 function CreateVote() {
@@ -35,12 +36,6 @@ function CreateVote() {
     navigate('/voting-list');
   };
 
-  const handleLogout = () => {
-    setIsLogin(0);
-    setVc('');
-    navigate('/');
-  };
-
   const handleAddOption = () => {
     setOptions([...options, '']);
   };
@@ -58,9 +53,7 @@ function CreateVote() {
   return (
     <Grid container direction="column" alignItems="center" spacing={2}>
       <Grid item>
-        <Button variant="contained" color="secondary" onClick={handleLogout}>
-          Logout
-        </Button>
+        <Logout/>
         <Button variant="contained" color="primary" onClick={handleCancel}>
           Back to list
         </Button>

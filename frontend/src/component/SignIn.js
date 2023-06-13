@@ -57,7 +57,7 @@ function SignIn() {
       downloadLink.href = `data:text/json;charset=utf-8,${encodeURIComponent(
         JSON.stringify(response.data)
       )}`;
-      downloadLink.download = 'DID.json';
+      downloadLink.download = `${JSON.parse(JSON.stringify(response.data)).vc.credentialSubject.name}_DID.json`;
       downloadLink.click();
       setChooseLogin(true);
     } catch (error) {
