@@ -12,15 +12,18 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import data from "./data";
-
+import { UseContext } from "../hook/useStatus";
 function VotingList() {
   const navigate = useNavigate();
   const [value, setValue] = React.useState(0);
+  const {setIsLogin,setVc} = UseContext();
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   const handleLogout = () => {
+    setIsLogin(0)
+    setVc('')
     navigate("/");
   };
 

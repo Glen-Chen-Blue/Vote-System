@@ -2,8 +2,10 @@ import React from 'react';
 import { Button, Paper, Typography, List, ListItem, ListItemText, Grid } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import data from './data';
+import { UseContext } from '../hook/useStatus';
 function Voting() {
   const navigate = useNavigate();
+  const {setVc,setIsLogin} = UseContext();
   const { id } = useParams();
   
   // Find the vote with the given id
@@ -14,6 +16,8 @@ function Voting() {
   };
 
   const handleLogout = () => {
+    setIsLogin(0)
+    setVc('')
     navigate('/');
   };
 

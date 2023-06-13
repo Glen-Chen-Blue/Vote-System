@@ -3,11 +3,11 @@ import { Button, TextField, Box, Paper, Typography, Grid, IconButton } from '@mu
 import { useNavigate } from 'react-router-dom';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-
+import { UseContext } from '../hook/useStatus';
 function CreateVote() {
   const navigate = useNavigate();
   const [options, setOptions] = useState([""]);
-
+  const {setVc,setIsLogin} = UseContext();
   const handleCreate = () => {
     navigate('/voting-list');
   };
@@ -17,6 +17,8 @@ function CreateVote() {
   };
 
   const handleLogout = () => {
+    setIsLogin(0)
+    setVc('')
     navigate('/');
   };
 

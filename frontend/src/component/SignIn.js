@@ -2,18 +2,19 @@ import React, { useState } from 'react';
 import { Button, TextField, Grid, Paper, Typography, Box, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { UseContext } from '../hook/useStatus';
 axios.defaults.baseURL = 'http://localhost:4000';
 
 function SignIn() {
   const navigate = useNavigate();
-  const [isLogin, setIsLogin] = useState(true);
+  const [chooseLogin, setChooseLogin] = useState(true);
   const [name, setName] = useState('');
   const [age, setAge] = useState(0);
-  const [data, setData] = useState(null);
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState('');
   const [loading, setLoading] = useState(false);
   const [fileContent, setFileContent] = useState('');
+  const { setIsLogin,setVc } = UseContext();
 
   const handleLogin = async () => {
     if (!file) {
@@ -23,12 +24,13 @@ function SignIn() {
     setLoading(true);
     try {
       const formData = new FormData();
-      console.log(fileContent)
       formData.append('fileContent', fileContent);
       const response = await axios.post('/api/login', formData);
       setLoading(false);
       const result = response.data;
       if (result === true) {
+        setIsLogin(1);
+        setVc(fileContent)
         navigate('/voting-list');
       } else {
         alert('登录失败');
@@ -51,14 +53,13 @@ function SignIn() {
       setLoading(true);
       const response = await axios.post('/api/register', formData);
       setLoading(false);
-      setData(response.data);
       const downloadLink = document.createElement('a');
       downloadLink.href = `data:text/json;charset=utf-8,${encodeURIComponent(
         JSON.stringify(response.data)
       )}`;
       downloadLink.download = 'DID.json';
       downloadLink.click();
-      setIsLogin(true);
+      setChooseLogin(true);
     } catch (error) {
       console.error(error);
       setLoading(false);
@@ -78,7 +79,7 @@ function SignIn() {
   };
 
   const toggleForm = () => {
-    setIsLogin(!isLogin);
+    setChooseLogin(!chooseLogin);
   };
 
   return (
@@ -86,14 +87,14 @@ function SignIn() {
       <Grid item xs={12} sm={8} md={6} lg={4}>
         <Paper style={{ padding: 20 }} elevation={5}>
           <Typography variant="h5" component="h2" align="center" gutterBottom>
-            {isLogin ? 'Login' : 'Register'}
+            {chooseLogin ? 'Login' : 'Register'}
           </Typography>
           {loading && (
             <Box mt={2} align="center">
               <CircularProgress />
             </Box>
           )}
-          {!isLogin && (
+          {!chooseLogin && (
             <Box mt={2}>
               <TextField
                 label="Name"
@@ -104,7 +105,7 @@ function SignIn() {
               />
             </Box>
           )}
-          {!isLogin && (
+          {!chooseLogin && (
             <Box mt={2}>
               <TextField
                 label="Age"
@@ -116,7 +117,7 @@ function SignIn() {
               />
             </Box>
           )}
-          {isLogin && (
+          {chooseLogin && (
             <Box mt={2}>
               <Button
                 variant="contained"
@@ -131,7 +132,7 @@ function SignIn() {
             </Box>
           )}
           <Box mt={2}>
-            {isLogin ? (
+            {chooseLogin ? (
               <Button
                 variant="contained"
                 color="primary"
@@ -155,7 +156,7 @@ function SignIn() {
           </Box>
           <Box mt={2} align="center">
             <Button color="secondary" onClick={toggleForm}>
-              {isLogin ? 'Create Account' : 'Already have an account?'}
+              {chooseLogin ? 'Create Account' : 'Already have an account?'}
             </Button>
           </Box>
         </Paper>
