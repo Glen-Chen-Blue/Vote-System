@@ -25,9 +25,13 @@ async function createVC(name, age) {
     const issuer = getIssuer();
     // const fragment = Math.random().toString(36).slice(-12);
 
-    const fragment = "#issuerKey"
+    const fragment = randomString(32);
     console.log(fragment)
     const account = await builder.createIdentity();
+    await issuer.createMethod({
+        content: identity.MethodContent.GenerateEd25519(),
+        fragment: fragment
+    })
     const subject = {
         id: account.document().id(),
         name: name,
@@ -160,12 +164,20 @@ async function login(privateKey, VC){
 async function setNewVc(poll_ID, vc){
     vc.credentialSubject.voted.push(poll_ID);
     console.log(vc.credentialSubject.voted);
+
+    const fragment = randomString(32);
+    console.log(fragment)
     const issuer = getIssuer();
+    await issuer.createMethod({
+        content: identity.MethodContent.GenerateEd25519(),
+        fragment: fragment
+    })
+    
     const subject = {
         id: vc.credentialSubject.id,
         name: vc.credentialSubject.name,
         age: vc.credentialSubject.age,
-        issuerKey: vc.credentialSubject.issuerKey,
+        issuerKey: fragment,
         voted: vc.credentialSubject.voted
     };
     console.log(subject)
@@ -175,8 +187,11 @@ async function setNewVc(poll_ID, vc){
         issuer: issuer.document().id(),
         credentialSubject: subject
     });
+    await issuer.deleteMethod({fragment: vc.credentialSubject.issuerKey})
+    
+    
     const signedVc = await issuer.createSignedCredential(
-        "#issuerKey",
+        fragment,
         unsignedVc,
         identity.ProofOptions.default(),
     );
