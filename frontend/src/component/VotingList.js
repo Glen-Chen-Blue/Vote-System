@@ -18,9 +18,9 @@ import Logout from "./logout";
 function VotingList() {
   const navigate = useNavigate();
   const [value, setValue] = useState(0);
-  const { setIsLogin, setVc } = UseContext();
+  const { setIsLogin, setVc,vc } = UseContext();
   const [pollList, setPollList] = useState([]);
-
+  const currentTime = new Date();
   useEffect(() => {
     async function fetchData() {
       const response = await axios.get('/api/getAllPoll');
@@ -60,9 +60,9 @@ function VotingList() {
       <Grid item>
         {pollList
           .filter((vote) => {
-            if (value === 0) return vote.active && !vote.voted;
-            else if (value === 1) return vote.voted;
-            else return !vote.active;
+            if (value===2) return currentTime > new Date(vote.time)
+            else if (value === 1) return JSON.parse(vc).vc.credentialSubject.voted.includes(vote.id)
+            else return currentTime < new Date(vote.time) && !JSON.parse(vc).vc.credentialSubject.voted.includes(vote.id)
           })
           .map((vote) => (
             <Paper

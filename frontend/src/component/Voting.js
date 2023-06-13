@@ -10,7 +10,7 @@ function Voting() {
   const { setVc, setIsLogin, vc } = UseContext();
   const [voteData, setVoteData] = React.useState({});
   const { id } = useParams();
-
+  const currentTime = new Date();
   React.useEffect(() => {
     async function fetchData() {
       const response = await axios.get(`/api/getPoll/${id}`);
@@ -64,7 +64,7 @@ function Voting() {
                 <ListItem key={index}>
                   <ListItemText>
                     {option}
-                    {!voteData.voted && voteData.active ? (
+                    {currentTime < new Date(voteData.time) && !JSON.parse(vc).vc.credentialSubject.voted.includes(voteData.id) ? (
                       <Button variant="contained" color="primary" onClick={()=>handleVoting(id,option)}>
                         Vote
                       </Button>
