@@ -1,44 +1,48 @@
-const data = [
-  {
-    id: 1,
-    title: "投票1",
-    description: "這是投票1的描述",
-    options: [{ option: "選項1" }, { option: "選項2" }],
-    active: true,
-    endTime: "2023-12-31",
-    lastBlockID: 0,
-  },
-  {
-    id: 2,
-    title: "投票2",
-    description: "這是投票2的描述",
-    options: [
-      { option: "選項1", votes: 30 },
-      { option: "選項2", votes: 40 },
-      { option: "選項3", votes: 50 },
-    ],
-    active: false,
-    endTime: "2023-05-31",
-  },
-  {
-    id: 3,
-    titl: "投票3",
-    description: "這是投票3的描述",
-    options: [{ option: "項1" }, { option: "選項2" }],
-    active: true,
-    endTime: "2023-12-31",
-  },
-  {
-    id: 4,
-    title: "投票4",
-    description: "這是投票4的描述",
-    options: [
-      { option: "選項1", votes: 30 },
-      { option: "選項2", votes: 40 },
-      { option: "選項3", votes: 50 },
-    ],
-    active: false,
-    endTime: "2023-05-31",
-  },
+let polls = [
+  // {
+  //   id: 1,
+  //   title: "投票1",
+  //   description: "這是投票1的描述",
+  //   options: ["a", "b"],
+  //   active: true,
+  //   endTime: "2023-12-31",
+  //   lastBlockID: 0,
+  // },
 ];
-export default data;
+
+function createPoll(title, description, options, endTime) {
+  const time=new Date(endTime)
+  const newPoll = {
+    id: "POLL_" + polls.length.toString() + title + "_",
+    title,
+    description,
+    options,
+    active: true,
+    time,
+    lastBlockID: 0,
+  };
+  polls.push(newPoll);
+  console.log(polls)
+  return newPoll.id;
+}
+
+function modifyLastID(poll_ID, lastBlockID) {
+  polls = polls.map((d) => {
+    d.id === poll_ID
+      ? (d.lastBlockID = lastBlockID)
+      : (d.lastBlockID = d.lastBlockID);
+    return d;
+  });
+  // console.log("modify: ", polls);
+}
+
+function getPoll(poll_ID) {
+  // console.log("GET:", polls);
+  return polls.filter((d) => d.id === poll_ID)[0];
+}
+
+function getAllPoll() {
+  return polls;
+}
+
+export { createPoll, modifyLastID, getPoll, getAllPoll };
