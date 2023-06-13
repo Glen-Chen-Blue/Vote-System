@@ -33,7 +33,8 @@ function Voting() {
     navigate('/voting-list');
   };
 
-
+  const dateTime = new Date(voteData.time);
+  const formattedTime = dateTime.toLocaleString();
   return (
     <Grid container direction="column" alignItems="center" spacing={2}>
       <Grid item>
@@ -63,7 +64,7 @@ function Voting() {
                 </ListItem>
               ))}
           </List>
-          <Typography variant="body2">End Time: {Date(voteData.time).toLocaleString()}</Typography>
+          <Typography variant="body2">End Time: {formattedTime}</Typography>
         </Paper>
       </Grid>
     </Grid>

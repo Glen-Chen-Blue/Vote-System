@@ -18,6 +18,16 @@ function CreateVote() {
 
   const handleCreate = async () => {
     console.log(title, content, options, endtime);
+    if (title.trim() === '' || content.trim() === '' || endtime.trim() === '') {
+      alert('Please fill in all fields');
+      return;
+    }
+    const currentDatetime = new Date();
+    const selectedDatetime = new Date(endtime);
+    if (selectedDatetime < currentDatetime) {
+      alert('End time cannot be earlier than current time');
+      return;
+    }
     try {
       let formData = new FormData();
       formData.append('title', title);

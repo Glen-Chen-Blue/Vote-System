@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { format } from 'date-fns';
 import {
   Button,
   Tabs,
@@ -81,7 +82,7 @@ function VotingList() {
                   </ListItem>
                 ))}
               </List>
-              <Typography variant="body2">End Time: {Date(vote.time).toLocaleString()}</Typography>
+              <Typography variant="body2">End Time: {format(new Date(vote.time), 'yyyy-MM-dd HH:mm')}</Typography>
             </Paper>
           ))}
       </Grid>
