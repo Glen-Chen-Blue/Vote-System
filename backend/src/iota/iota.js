@@ -36,8 +36,8 @@ async function createVC(name, age) {
         id: account.document().id(),
         name: name,
         age: age,
-        issuerKey: fragment,
-        DidUrl: identity.ExplorerUrl.mainnet().resolverUrl(account.did())
+        issuerKey: fragment
+        // DidUrl: identity.ExplorerUrl.mainnet().resolverUrl(account.did())
     };
     const unsignedVc = new identity.Credential({
         id: "https://example.edu/credentials/3732",
@@ -161,4 +161,7 @@ async function login(privateKey, VC){
         return false;
     }
 }
-export {createVC, login};
+async function vote(){
+
+}
+export {createVC, login, vote};
