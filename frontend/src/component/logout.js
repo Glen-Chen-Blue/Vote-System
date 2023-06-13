@@ -17,7 +17,7 @@ function Logout() {
         navigate('/');
     }
     return(
-        <Button variant="contained" color="secondary" onClick={logout}>
+        <Button style={{ backgroundColor:'white', color:'black', borderRadius:'20px', fontWeight:600 }} variant="contained" color="secondary" onClick={logout}>
           Logout
         </Button>
     );
