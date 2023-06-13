@@ -46,17 +46,15 @@ function Voting() {
 
 
   return (
-    <Grid container direction="column" alignItems="center" spacing={2}>
-      <Grid item>
+    <Grid className='outergrid' style={{ backgroundColor: 'black', minHeight: '100vh'}} container direction="column" alignItems="center">
+      <Grid style={{ width:'100%', display:'flex', justifyContent:'flex-end', padding:'2rem' }} item>
         <Logout/>
-        <Button variant="contained" color="primary" onClick={handleBack}>
-          Back to list
-        </Button>
       </Grid>
       <Grid item>
-        <Paper sx={{ p: 2, width: '60vw' }}>
-          <Typography variant="h6">{voteData.title}</Typography>
+        <Paper sx={{ p: 5, width: '50vw', borderRadius:5 }}>
+          <Typography style={{ fontWeight:600 }} variant="h6">{voteData.title}</Typography>
           <Typography variant="body2">{voteData.description}</Typography>
+          <hr style={{ borderColor:'black', borderWidth:'0.5px' }}></hr>
           <List>
             {voteData.options &&
               voteData.options.map((option, index) => (
@@ -64,7 +62,7 @@ function Voting() {
                   <ListItemText>
                     {option}
                     {!voteData.voted && voteData.active ? (
-                      <Button variant="contained" color="primary" onClick={()=>handleVoting(id,option)}>
+                      <Button style={{ marginLeft:'1rem', backgroundColor:'black'}} variant="contained" color="primary" onClick={()=>handleVoting(id,option)}>
                         Vote
                       </Button>
                     ) : voteData.active ? null : (
@@ -74,8 +72,14 @@ function Voting() {
                 </ListItem>
               ))}
           </List>
+          <hr style={{ borderColor:'black', borderWidth:'0.5px' }}></hr>
           <Typography variant="body2">End Time: {Date(voteData.time).toLocaleString()}</Typography>
         </Paper>
+      </Grid>
+      <Grid style={{ padding:'3rem' }} item>
+        <Button style={{ backgroundColor:'white', color:'black', borderRadius:10 }} variant="contained" color="primary" onClick={handleBack}>
+          Back to list
+        </Button>
       </Grid>
     </Grid>
   );

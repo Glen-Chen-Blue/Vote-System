@@ -82,6 +82,23 @@ function SignIn() {
     setChooseLogin(!chooseLogin);
   };
 
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const selectedFile = e.dataTransfer.files[0];
+    setFile(selectedFile);
+    setFileName(selectedFile?.name);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const content = e.target.result;
+      setFileContent(content);
+    };
+    reader.readAsText(selectedFile);
+  };
+
   return (
     <Grid style={{ backgroundColor: 'black', minHeight: '100vh' }} container justifyContent="center" alignItems="center">
       <Grid item xs={12} sm={8} md={6} lg={4}>
@@ -128,6 +145,8 @@ function SignIn() {
           {chooseLogin && (
             <Box style={{ width: '70%' }} mt={5}>
               <Button
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
                 style={{ backgroundColor: 'black', color: 'white', marginTop: 0, borderRadius: 10, width: '100%' }}
                 variant="contained"
                 component="label"
