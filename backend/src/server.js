@@ -9,25 +9,39 @@ import {
   modifyLastID,
   getPoll,
   getAllPoll,
+  getLatest,
   initializeLatest,
   endPoll,
 } from "./data";
 
 // import { Tag } from "@iota/core";
 require("dotenv").config({ path: "../.env" });
-// async function testVoting() {
-//   console.log("start voting");
-//   const poll = getPoll(1);
-//   console.log(poll.lastBlockID);
-//   await voting(1, "a");
-//   await voting(1, "b");
-//   await voting(1, "a");
-//   await voting(1, "a");
-//   await voting(1, "b");
-//   await voting(1, "a");
-//   console.log("start counting");
-//   await counting(1);
-// }
+async function testVoting() {
+  // console.log("start voting");
+  // const poll = getPoll("POLL_1VOTING_");
+  // console.log(poll.lastBlockID);
+  // await voting("POLL_1VOTING_", "a");
+  // await voting("POLL_1VOTING_", "b");
+  // await voting("POLL_1VOTING_", "a");
+  // await voting("POLL_1VOTING_", "a");
+  // await voting("POLL_1VOTING_", "b");
+  // await voting("POLL_1VOTING_", "a");
+  // console.log("start counting");
+  // await counting("POLL_1VOTING_");
+  // console.log(getPoll("POLL_1VOTING_"));
+  const poll_ID = createPoll(
+    "TEST",
+    "======",
+    ["yes", "no"],
+    "2023-06-14T02:00:45"
+  );
+  await voting(poll_ID, { option: "yes", vote: -1 });
+  await voting(poll_ID, { option: "no", vote: -1 });
+  await voting(poll_ID, { option: "yes", vote: -1 });
+  await voting(poll_ID, { option: "yes", vote: -1 });
+  // await counting(poll_ID);
+  // console.log(getPoll(poll_ID));
+}
 // const polls = getAllPoll();
 
 const app = express();
@@ -47,5 +61,6 @@ async function startServer() {
   setInterval(() => {
     endPoll();
   }, 1000);
+  testVoting();
 }
 startServer();

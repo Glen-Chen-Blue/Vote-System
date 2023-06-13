@@ -38,9 +38,9 @@ function Voting() {
     formData.append("choice", choice);
     formData.append("vc", vc);
     const response = await axios.post("/api/voting", formData);
-    if (response == "voted") {
+    if (response === "voted") {
       console.log("voted");
-    } else if (response == "error") {
+    } else if (response === "error") {
       console.log("error");
     } else {
       setVc(JSON.stringify(response.data));
@@ -56,8 +56,7 @@ function Voting() {
       style={{ backgroundColor: "black", minHeight: "100vh" }}
       container
       direction="column"
-      alignItems="center"
-    >
+      alignItems="center">
       <Grid
         style={{
           width: "100%",
@@ -65,16 +64,14 @@ function Voting() {
           justifyContent: "flex-end",
           padding: "2rem",
         }}
-        item
-      >
+        item>
         <Logout />
       </Grid>
       <Grid item>
         <Paper sx={{ p: 5, width: "50vw", borderRadius: 5 }}>
           <Typography
             style={{ fontWeight: 600, fontSize: "25px" }}
-            variant="h6"
-          >
+            variant="h6">
             {voteData.title}
           </Typography>
           <Typography variant="body2">{voteData.description}</Typography>
@@ -84,7 +81,7 @@ function Voting() {
               voteData.options.map((option, index) => (
                 <ListItem key={index}>
                   <ListItemText>
-                    {option}
+                    {option.option}
                     {currentTime < new Date(voteData.endTime) &&
                     !JSON.parse(vc).vc.credentialSubject.voted.includes(
                       voteData.id
@@ -93,8 +90,7 @@ function Voting() {
                         style={{ marginLeft: "1rem", backgroundColor: "black" }}
                         variant="contained"
                         color="primary"
-                        onClick={() => handleVoting(id, option)}
-                      >
+                        onClick={() => handleVoting(id, option)}>
                         Vote
                       </Button>
                     ) : voteData.active ? null : (
@@ -113,8 +109,7 @@ function Voting() {
           style={{ backgroundColor: "white", color: "black", borderRadius: 10 }}
           variant="contained"
           color="primary"
-          onClick={handleBack}
-        >
+          onClick={handleBack}>
           Back to list
         </Button>
       </Grid>

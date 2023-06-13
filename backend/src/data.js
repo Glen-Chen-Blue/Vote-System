@@ -5,7 +5,10 @@ let polls = [
     id: "POLL_0END_",
     title: "END",
     description: "jjjjj",
-    options: [{ option: "a" }, { option: "b" }],
+    options: [
+      { option: "a", votes: 3 },
+      { option: "b", votes: 4 },
+    ],
     active: false,
     endTime: "2023-06-13T19:05",
     lastBlockID: 0,
@@ -14,10 +17,14 @@ let polls = [
     id: "POLL_1VOTING_",
     title: "END",
     description: "jjjjj",
-    options: ["a", "b"],
+    options: [
+      { option: "a", votes: 1 },
+      { option: "b", votes: 4 },
+    ],
     active: true,
     endTime: "2023-06-14T15:00",
-    lastBlockID: 0,
+    lastBlockID:
+      "0x686f72a90cf9c88dda514af97f1486d28aa05d4978eabfe43d00eeef888f0726",
   },
 ];
 
@@ -27,18 +34,21 @@ let latestEnd = {
 };
 
 function createPoll(title, description, options, endTime) {
+  let choices = [];
+  options.forEach((option) => choices.push({ option, votes: -1 }));
   const newPoll = {
     id: "POLL_" + polls.length.toString() + title + "_",
     title,
     description,
-    options,
+    options: choices,
     active: true,
     endTime,
     lastBlockID: 0,
   };
   polls.push(newPoll);
   console.log(polls);
-  if (latestEnd.latestTime > new Date(endTime)) {
+  if (new Date(latestEnd.latestTime) > new Date(endTime)) {
+    console.log("LATER");
     latestEnd = {
       latestID: newPoll.id,
       latestTime: endTime,
@@ -72,6 +82,7 @@ function getLatest() {
 
 function initializeLatest() {
   latestEnd.latestTime = 1000000000000000;
+  latestEnd.latestID = 0;
   polls.forEach((poll) => {
     if (poll.active) {
       if (latestEnd.latestTime > new Date(poll.endTime)) {
@@ -88,8 +99,13 @@ async function endPoll() {
   //   setTimeout(endPoll(), 1000);
   // }
   let currentTime = new Date();
-  if (latestEnd.latestTime < currentTime) {
-    let result = await coutingVotes(latestEnd.latestID);
+  console.log(currentTime);
+  console.log(latestEnd.latestTime);
+  if (new Date(latestEnd.latestTime) < currentTime && latestEnd.latestID) {
+    const poll_ID = latestEnd.latestID;
+    initializeLatest();
+    console.log("end", poll_ID);
+    let result = await coutingVotes(poll_ID);
     polls = polls.map((d) => {
       if (d.id === poll_ID) {
         d.options = result;
@@ -97,7 +113,6 @@ async function endPoll() {
       }
       return d;
     });
-    initializeLatest();
   }
   // await sleep(1000);
 }

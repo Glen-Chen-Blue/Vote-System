@@ -4,6 +4,7 @@ import { modifyLastID, getPoll } from "../data";
 
 async function voting(poll_ID, choice) {
   // initLogger();
+  console.log("fuck you", choice);
   const poll = getPoll(poll_ID);
   if (!process.env.NODE_URL) {
     throw new Error(".env NODE_URL is undefined, see .env.example");
@@ -18,7 +19,7 @@ async function voting(poll_ID, choice) {
     JSON.stringify({
       poll_ID: poll_ID, //"WEB_VOTING_0",
       prevID: poll.lastBlockID, // Previous vote's ID in string,
-      vote: choice, // "choices in int",
+      vote: choice.option, // "choices in int",
     })
   );
   const options = {
@@ -36,7 +37,7 @@ async function voting(poll_ID, choice) {
       secretManager,
       options
     );
-    console.log("success vote for: ", choice);
+    console.log("success vote for: ", choice.option);
     console.log(blockIdAndBlock[0]);
     modifyLastID(poll_ID, blockIdAndBlock[0]);
     // let newData = data.map((d.id == poll_ID) => {d.lastBlockID = blockIdAndBlock[0])

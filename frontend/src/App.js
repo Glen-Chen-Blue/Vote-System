@@ -10,7 +10,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        {(isLogin==1 && vc!=='') ? (
+        {isLogin === 1 && vc !== "" ? (
           <>
             <Route path="/voting-list" element={<VotingList />} />
             <Route path="/voting/:id" element={<Voting />} />
