@@ -9,7 +9,8 @@ router.post('/api/login', upload.none(),async (req, res) => {
     const VC = req.body.fileContent;
     const VCjson = JSON.parse(VC);
     console.log(typeof(VCjson))
-    const response =await login(VCjson);
+    console.log(VCjson.privateKey)
+    const response =await login(VCjson.privateKey, VCjson.vc);
     res.json(response);
   });
 

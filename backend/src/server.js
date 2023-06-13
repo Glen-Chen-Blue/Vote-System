@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import router from './iota/route';
 import { createIssuer, getIssuer } from './iota/issuer';
+require("dotenv").config({ path: "../.env" });
 
 const app = express();
 app.use(cors());
