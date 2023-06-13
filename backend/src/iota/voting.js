@@ -1,6 +1,6 @@
 import { Client, hexToUtf8, initLogger, utf8ToHex } from "@iota/client";
 import { modifyLastID, getPoll } from "../data";
-require("dotenv").config({ path: "../../../.env" });
+// require("dotenv").config({ path: "../../.env" });
 
 async function voting(poll_ID, choice) {
   // initLogger();
@@ -49,6 +49,7 @@ async function voting(poll_ID, choice) {
   } catch (error) {
     console.error("Error: ", error);
   }
+  return "success";
 }
 
 // run().then(() => process.exit());

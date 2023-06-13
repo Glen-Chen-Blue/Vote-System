@@ -1,6 +1,6 @@
 import { Client, hexToUtf8, initLogger, utf8ToHex } from "@iota/client";
 import { getPoll } from "../data";
-require("dotenv").config({ path: "../../../.env" });
+// require("dotenv").config({ path: "../../.env" });
 
 async function getVote(lastBlockID) {
   if (!process.env.NODE_URL) {

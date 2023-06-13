@@ -2,14 +2,12 @@ import { createIssuer, getIssuer } from './iota/issuer';
 import express from "express";
 import cors from "cors";
 import router from "./iota/route";
-import { Client, hexToUtf8, initLogger, utf8ToHex } from "@iota/client";
 import counting from "./iota/coutingVotes";
 import voting from "./iota/voting";
 import { createPoll, modifyLastID, getPoll } from "./data";
 
 // import { Tag } from "@iota/core";
 require("dotenv").config({ path: "../.env" });
-
 // async function testVoting() {
 //   console.log("start voting");
 //   const poll = getPoll(1);
@@ -37,5 +35,4 @@ async function startServer() {
         console.log(`Server is up on port ${port}.`);
     });
 }
-
 startServer();
