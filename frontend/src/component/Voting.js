@@ -17,6 +17,7 @@ function Voting() {
   const navigate = useNavigate();
   const { setVc, setIsLogin, vc } = UseContext();
   const [voteData, setVoteData] = React.useState({});
+  const [voted, setVoted] = React.useState(false);
   const { id } = useParams();
   const currentTime = new Date();
   React.useEffect(() => {
@@ -32,17 +33,24 @@ function Voting() {
     navigate("/voting-list");
   };
 
+  const handleVoted = () => {
+    
+  }
+
   const handleVoting = async (poll_ID, choice) => {
     const formData = new FormData();
-    formData.append("poll_ID", poll_ID);
-    formData.append("choice", choice);
-    formData.append("vc", vc);
-    const response = await axios.post("/api/voting", formData);
-    if (response === "voted") {
-      console.log("voted");
-    } else if (response === "error") {
-      console.log("error");
-    } else {
+    formData.append('poll_ID', poll_ID);
+    formData.append('choice', choice);
+    formData.append('vc', vc);
+    setVoted(true);
+    const response = await axios.post('/api/voting', formData);
+    if(response == 'voted'){
+      console.log('voted');
+    }
+    else if(response == 'error'){
+      console.log('error');
+    }
+    else{
       setVc(JSON.stringify(response.data));
       navigate("/voting-list");
     }
@@ -82,15 +90,8 @@ function Voting() {
                 <ListItem key={index}>
                   <ListItemText>
                     {option.option}
-                    {currentTime < new Date(voteData.endTime) &&
-                    !JSON.parse(vc).vc.credentialSubject.voted.includes(
-                      voteData.id
-                    ) ? (
-                      <Button
-                        style={{ marginLeft: "1rem", backgroundColor: "black" }}
-                        variant="contained"
-                        color="primary"
-                        onClick={() => handleVoting(id, option)}>
+                    {currentTime < new Date(voteData.time) && !JSON.parse(vc).vc.credentialSubject.voted.includes(voteData.id) ? (
+                      <Button style={{ marginLeft:'3rem', backgroundColor:voted?'gray':'black', cursor:voted?'not-allowed':'pointer'}} variant="contained" onClick={()=>handleVoting(id,option)}>
                         Vote
                       </Button>
                     ) : voteData.active ? null : (

@@ -76,43 +76,18 @@ function VotingList() {
       </Grid>
       <Grid item>
         <Tabs value={value} onChange={handleChange} indicatorColor="white">
-          <Tab
-            label="Can Vote"
-            style={{
-              color: value === 0 ? "white" : "gray",
-              fontWeight: value === 0 ? 600 : 400,
-            }}
-          />
-          <Tab
-            label="Voted"
-            style={{
-              color: value === 1 ? "white" : "gray",
-              fontWeight: value === 1 ? 600 : 400,
-            }}
-          />
-          <Tab
-            label="Vote Counting"
-            style={{
-              color: value === 2 ? "white" : "gray",
-              fontWeight: value === 2 ? 600 : 400,
-            }}
-          />
-          <Tab
-            label="End Vote"
-            style={{
-              color: value === 3 ? "white" : "gray",
-              fontWeight: value === 3 ? 600 : 400,
-            }}
-          />
+          <Tab label="Can Vote" style={{ color: value === 0 ? 'white' : 'gray', fontWeight: value===0 ? 600:400 }} />
+          <Tab label="Voted" style={{ color: value === 1 ? 'white' : 'gray', fontWeight: value===1 ? 600:400 }} />
+          <Tab label="End Vote" style={{ color: value === 2 ? 'white' : 'gray', fontWeight: value===2 ? 600:400 }} />
         </Tabs>
       </Grid>
       <Grid item>
         {pollList
           .filter((vote) => {
-            if (value === 3)
-              return currentTime > new Date(vote.endTime) && !vote.active;
-            else if (value === 2)
-              return currentTime > new Date(vote.endTime) && vote.active;
+            // if (value === 3)
+            //   return currentTime > new Date(vote.endTime) && !vote.active;
+            if (value === 2)
+              return currentTime > new Date(vote.endTime);
             else if (value === 1)
               return JSON.parse(vc).vc.credentialSubject.voted.includes(
                 vote.id
@@ -127,20 +102,12 @@ function VotingList() {
             <Paper
               key={vote.id}
               onClick={() => handleVoteClick(vote.id)}
-              sx={{
-                width: "50vw",
-                mb: 1,
-                p: 5,
-                cursor: "pointer",
-                borderRadius: 5,
-              }}
+              sx={{ width: '50vw', mb: 1, p: 5, m:3, cursor: 'pointer', borderRadius:5 }}
             >
-              <Typography
-                style={{ fontWeight: 600, fontSize: "25px" }}
-                variant="h6"
-              >
-                {vote.title}
-              </Typography>
+              <Grid style={{ display:'flex', justifyContent:'space-between' }} item>
+                <Typography style={{ fontWeight:600, fontSize:'25px' }} variant="h6">{vote.title}</Typography>
+                {(value===2&&vote.active)&&<Typography style={{ fontWeight:400, fontSize:'20px', backgroundColor:'rgb(100,100,100)', color:'white', paddingTop:5, paddingBottom:5, paddingLeft:15, paddingRight:15, borderRadius:20 }} variant="h6">Counting...</Typography>}
+              </Grid>
               <Typography variant="body2">{vote.description}</Typography>
               <hr style={{ borderColor: "black", borderWidth: "0.5px" }}></hr>
               <List>
