@@ -4,17 +4,29 @@
 const identity = require('@iota/identity-wasm/node');
 // import {GetIssuer} from './issuer'
 // const storage = require("Storage")
-const builder = new identity.AccountBuilder();
-const issuer = await builder.createIdentity();
+// const builder = new identity.AccountBuilder();
+// const issuer = await builder.createIdentity();
 /**
  This example shows how to create a Verifiable Credential and validate it.
  In this example, alice takes the role of the subject, while we also have an issuer.
  The issuer signs a UniversityDegreeCredential type verifiable credential with Alice's name and DID.
  This Verifiable Credential can be verified by anyone, allowing Alice to take control of it and share it with whomever they please.
  **/
+ function randomString(e) {    
+    e = e || 32;
+    var t = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678",
+    a = t.length,
+    n = "";
+    for (var i = 0; i < e; i++) n += t.charAt(Math.floor(Math.random() * a));
+    return n
+}
 async function createVC(name, age) {
+    const builder = new identity.AccountBuilder();
+    const issuer = await builder.createIdentity();
     
-    const fragment = Math.random().toString(36);
+    const fragment = Math.random().toString(36).slice(-12);
+    // const fragment = "testkey"
+    console.log(fragment)
     await issuer.createMethod({
         content: identity.MethodContent.GenerateEd25519(),
         fragment: fragment
@@ -34,7 +46,7 @@ async function createVC(name, age) {
         credentialSubject: subject
     });
     const signedVc = await issuer.createSignedCredential(
-        "#issuerKey",
+        fragment,
         unsignedVc,
         identity.ProofOptions.default(),
     );
@@ -47,16 +59,18 @@ async function createVC(name, age) {
     console.log(`VC successfully validated`);
     const credentialJSON = signedVc.toJSON();
     console.log(credentialJSON);   
-    const privateKey =  identity.MethodContent.GenerateEd25519();
+    const PrivateKey =  randomString(32);
+    console.log(PrivateKey)
     await account.createMethod({
-        content: privateKey,
+        content: identity.MethodContent.PrivateEd25519(PrivateKey),
         fragment: "#accountKey"
     })
-
+    
     const output = {
         vc:credentialJSON,
-        privateKey:privateKey
+        privateKey:PrivateKey
     }
+    console.log(output);
 
     return output;
 }
@@ -74,6 +88,7 @@ async function login(privateKey, VC){
         const account = await re.resolve(VC.credentialSubject.id);
         const receivedVc=identity.Credential.fromJSON(VC);
         console.log(receivedVc)
+        console.log(account.document().id())
         const unsignedVp = new identity.Presentation({
             holder: account.document().id(),
             verifiableCredential: receivedVc
@@ -91,11 +106,12 @@ async function login(privateKey, VC){
         //         expires
         //     })
         // );
+        // console.log(identity.DIDUrl.parse(VC.credentialSubject.id).query());
 
-        const signedVc = await account.document().signPresentation(
+        const signedVp = await account.document().signPresentation(
             unsignedVp,
             privateKey,
-            DidUrl,
+            "#accountKey",
             new identity.ProofOptions({
                 challenge: challenge,
                 expires

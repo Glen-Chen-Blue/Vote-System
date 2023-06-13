@@ -17,5 +17,5 @@ app.use("/", router);
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
   console.log(`Server is up onport ${port}.`);
-  voting(1, data[1].lastBlockID);
+  // voting(1, data[1].lastBlockID);
 });
