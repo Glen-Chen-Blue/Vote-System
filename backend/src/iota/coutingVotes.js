@@ -32,10 +32,10 @@ async function getVote(lastBlockID) {
 
 async function coutingVotes(poll_ID) {
   const poll = getPoll(poll_ID);
-  const result = {};
+  // const result = [];
   const choices = poll.options;
   let lastBlockID = poll.lastBlockID;
-  choices.map((choice) => (result[choice] = 0));
+  // choices.forEach((choice) => (result.push()));
   console.log(lastBlockID);
   do {
     const { blockID, choice } = await getVote(lastBlockID);
@@ -45,10 +45,11 @@ async function coutingVotes(poll_ID) {
     }
     console.log("vote for: ", choice);
     result[choice] += 1;
+    choices;
     lastBlockID = blockID;
   } while (lastBlockID !== 0);
   console.log("voting result:", result);
-  return result;
+  return choices;
 }
 // run().then(() => process.exit());
 

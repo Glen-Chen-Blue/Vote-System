@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { format } from 'date-fns';
+import { format } from "date-fns";
 import {
   Button,
   Tabs,
@@ -18,12 +18,12 @@ import Logout from "./logout";
 function VotingList() {
   const navigate = useNavigate();
   const [value, setValue] = useState(0);
-  const { setIsLogin, setVc,vc } = UseContext();
+  const { setIsLogin, setVc, vc } = UseContext();
   const [pollList, setPollList] = useState([]);
   const currentTime = new Date();
   useEffect(() => {
     async function fetchData() {
-      const response = await axios.get('/api/getAllPoll');
+      const response = await axios.get("/api/getAllPoll");
       setPollList(response.data);
       console.log(response.data);
     }
@@ -45,7 +45,7 @@ function VotingList() {
   return (
     <Grid container direction="column" alignItems="center" spacing={2}>
       <Grid item>
-        <Logout/>
+        <Logout />
         <Button variant="contained" color="primary" onClick={handleCreate}>
           Create Vote
         </Button>
@@ -61,16 +61,25 @@ function VotingList() {
       <Grid item>
         {pollList
           .filter((vote) => {
-            if (value===3) return currentTime > new Date(vote.time) && !vote.active
-            else if (value===2) return currentTime > new Date(vote.time) && vote.active
-            else if (value === 1) return JSON.parse(vc).vc.credentialSubject.voted.includes(vote.id)
-            else return currentTime < new Date(vote.time) && !JSON.parse(vc).vc.credentialSubject.voted.includes(vote.id)
+            if (value === 3)
+              return currentTime > new Date(vote.endTime) && !vote.active;
+            else if (value === 2)
+              return currentTime > new Date(vote.endTime) && vote.active;
+            else if (value === 1)
+              return JSON.parse(vc).vc.credentialSubject.voted.includes(
+                vote.id
+              );
+            else
+              return (
+                currentTime < new Date(vote.endTime) &&
+                !JSON.parse(vc).vc.credentialSubject.voted.includes(vote.id)
+              );
           })
           .map((vote) => (
             <Paper
               key={vote.id}
               onClick={() => handleVoteClick(vote.id)}
-              sx={{ width: '60vw', mb: 1, p: 1, cursor: 'pointer' }}
+              sx={{ width: "60vw", mb: 1, p: 1, cursor: "pointer" }}
             >
               <Typography variant="h6">{vote.title}</Typography>
               <Typography variant="body2">{vote.description}</Typography>
@@ -78,13 +87,15 @@ function VotingList() {
                 {vote.options.map((option, index) => (
                   <ListItem key={index}>
                     <ListItemText>
-                      {option}
+                      {option.option}
                       {vote.active ? "" : ":" + option.votes}
                     </ListItemText>
                   </ListItem>
                 ))}
               </List>
-              <Typography variant="body2">End Time: {format(new Date(vote.time), 'yyyy-MM-dd HH:mm')}</Typography>
+              <Typography variant="body2">
+                End Time: {format(new Date(vote.endTime), "yyyy-MM-dd HH:mm")}
+              </Typography>
             </Paper>
           ))}
       </Grid>

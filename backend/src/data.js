@@ -1,15 +1,24 @@
 import coutingVotes from "./iota/coutingVotes";
 
 let polls = [
-  // {
-  //   id: 1,
-  //   title: "投票1",
-  //   description: "這是投票1的描述",
-  //   options: ["a", "b"],
-  //   active: true,
-  //   endTime: "2023-12-31",
-  //   lastBlockID: 0,
-  // },
+  {
+    id: "POLL_0END_",
+    title: "END",
+    description: "jjjjj",
+    options: [{ option: "a" }, { option: "b" }],
+    active: false,
+    endTime: "2023-06-13T19:05",
+    lastBlockID: 0,
+  },
+  {
+    id: "POLL_1VOTING_",
+    title: "END",
+    description: "jjjjj",
+    options: ["a", "b"],
+    active: true,
+    endTime: "2023-06-14T15:00",
+    lastBlockID: 0,
+  },
 ];
 
 let latestEnd = {
@@ -65,7 +74,7 @@ function initializeLatest() {
   latestEnd.latestTime = 1000000000000000;
   polls.forEach((poll) => {
     if (poll.active) {
-      if (latestTime > new Date(poll.endTime)) {
+      if (latestEnd.latestTime > new Date(poll.endTime)) {
         latestEnd.latestID = poll.poll_ID;
         latestEnd.latestTime = new Date(poll.endTime);
       }
