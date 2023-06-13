@@ -54,13 +54,15 @@ function VotingList() {
         <Tabs value={value} onChange={handleChange}>
           <Tab label="Can Vote" />
           <Tab label="Voted" />
+          <Tab label="Vote Counting" />
           <Tab label="End Vote" />
         </Tabs>
       </Grid>
       <Grid item>
         {pollList
           .filter((vote) => {
-            if (value===2) return currentTime > new Date(vote.time)
+            if (value===3) return currentTime > new Date(vote.time) && !vote.active
+            else if (value===2) return currentTime > new Date(vote.time) && vote.active
             else if (value === 1) return JSON.parse(vc).vc.credentialSubject.voted.includes(vote.id)
             else return currentTime < new Date(vote.time) && !JSON.parse(vc).vc.credentialSubject.voted.includes(vote.id)
           })
