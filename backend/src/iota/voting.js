@@ -4,7 +4,6 @@ import { modifyLastID, getPoll } from "../data";
 
 async function voting(poll_ID, choice) {
   // initLogger();
-  console.log("fuck you", choice);
   const poll = getPoll(poll_ID);
   if (!process.env.NODE_URL) {
     throw new Error(".env NODE_URL is undefined, see .env.example");

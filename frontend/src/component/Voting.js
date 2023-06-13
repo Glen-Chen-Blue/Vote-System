@@ -35,7 +35,7 @@ function Voting() {
   const handleVoting = async (poll_ID, choice) => {
     const formData = new FormData();
     formData.append("poll_ID", poll_ID);
-    formData.append("choice", choice);
+    formData.append("choice", JSON.stringify(choice));
     formData.append("vc", vc);
     const response = await axios.post("/api/voting", formData);
     if (response === "voted") {
@@ -46,6 +46,7 @@ function Voting() {
       setVc(JSON.stringify(response.data));
       navigate("/voting-list");
     }
+
   };
 
   const dateTime = new Date(voteData.endTime);

@@ -86,11 +86,12 @@ function initializeLatest() {
   polls.forEach((poll) => {
     if (poll.active) {
       if (latestEnd.latestTime > new Date(poll.endTime)) {
-        latestEnd.latestID = poll.poll_ID;
+        latestEnd.latestID = poll.id;
         latestEnd.latestTime = new Date(poll.endTime);
       }
     }
   });
+  console.log("next open:", latestEnd.latestID);
 }
 
 async function endPoll() {
@@ -101,8 +102,18 @@ async function endPoll() {
   let currentTime = new Date();
   console.log(currentTime);
   console.log(latestEnd.latestTime);
-  if (new Date(latestEnd.latestTime) < currentTime && latestEnd.latestID) {
+  if (
+    new Date(latestEnd.latestTime) < new Date(currentTime) &&
+    latestEnd.latestID
+  ) {
     const poll_ID = latestEnd.latestID;
+    polls = polls.map((d) => {
+      if (d.id === poll_ID) {
+        d.active = false;
+      }
+      return d;
+    });
+    console.log(polls);
     initializeLatest();
     console.log("end", poll_ID);
     let result = await coutingVotes(poll_ID);
@@ -113,6 +124,7 @@ async function endPoll() {
       }
       return d;
     });
+    console.log(poll_ID, getPoll(poll_ID).options);
   }
   // await sleep(1000);
 }

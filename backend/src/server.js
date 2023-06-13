@@ -29,11 +29,11 @@ async function testVoting() {
   // console.log("start counting");
   // await counting("POLL_1VOTING_");
   // console.log(getPoll("POLL_1VOTING_"));
-  const poll_ID = createPoll(
-    "TEST",
+  let poll_ID = createPoll(
+    "TEST1",
     "======",
     ["yes", "no"],
-    "2023-06-14T02:00:45"
+    "2023-06-14T04:17:30"
   );
   await voting(poll_ID, { option: "yes", vote: -1 });
   await voting(poll_ID, { option: "no", vote: -1 });
@@ -41,6 +41,11 @@ async function testVoting() {
   await voting(poll_ID, { option: "yes", vote: -1 });
   // await counting(poll_ID);
   // console.log(getPoll(poll_ID));
+  poll_ID = createPoll("TEST2", "======", ["yes", "no"], "2023-06-14T04:17:30");
+  await voting(poll_ID, { option: "yes", vote: -1 });
+  await voting(poll_ID, { option: "no", vote: -1 });
+  await voting(poll_ID, { option: "yes", vote: -1 });
+  await voting(poll_ID, { option: "yes", vote: -1 });
 }
 // const polls = getAllPoll();
 
