@@ -39,8 +39,10 @@ function Voting() {
     formData.append("vc", vc);
     const response = await axios.post("/api/voting", formData);
     if (response === "voted") {
+      alert('voted')
       console.log("voted");
     } else if (response === "error") {
+      alert('error')
       console.log("error");
     } else {
       alert('vote success')
