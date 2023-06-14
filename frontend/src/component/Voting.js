@@ -7,6 +7,8 @@ import {
   ListItem,
   ListItemText,
   Grid,
+  CircularProgress,
+  Box,
 } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { UseContext } from "../hook/useStatus";
@@ -17,6 +19,8 @@ function Voting() {
   const navigate = useNavigate();
   const { setVc, setIsLogin, vc } = UseContext();
   const [voteData, setVoteData] = React.useState({});
+  const [voted, setVoted] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const { id } = useParams();
   const currentTime = new Date();
   React.useEffect(() => {
@@ -37,19 +41,21 @@ function Voting() {
     formData.append("poll_ID", poll_ID);
     formData.append("choice", JSON.stringify(choice));
     formData.append("vc", vc);
+    setLoading(true);
+    setVoted(true);
     const response = await axios.post("/api/voting", formData);
     if (response === "voted") {
-      alert('voted')
+      alert("voted");
       console.log("voted");
     } else if (response === "error") {
-      alert('error')
+      alert("error");
       console.log("error");
     } else {
-      alert('vote success')
+      alert("vote success");
       setVc(JSON.stringify(response.data));
       navigate("/voting-list");
     }
-
+    setLoading(false);
   };
 
   const dateTime = new Date(voteData.endTime);
@@ -60,7 +66,8 @@ function Voting() {
       style={{ backgroundColor: "black", minHeight: "100vh" }}
       container
       direction="column"
-      alignItems="center">
+      alignItems="center"
+    >
       <Grid
         style={{
           width: "100%",
@@ -68,16 +75,28 @@ function Voting() {
           justifyContent: "flex-end",
           padding: "2rem",
         }}
-        item>
+        item
+      >
         <Logout />
       </Grid>
       <Grid item>
         <Paper sx={{ p: 5, width: "50vw", borderRadius: 5 }}>
-          <Typography
-            style={{ fontWeight: 600, fontSize: "25px" }}
-            variant="h6">
-            {voteData.title}
-          </Typography>
+          <Grid
+            style={{ display: "flex", justifyContent: "space-between" }}
+            item
+          >
+            <Typography
+              style={{ fontWeight: 600, fontSize: "25px" }}
+              variant="h6"
+            >
+              {voteData.title}
+            </Typography>
+            {loading && (
+              <Box mt={2}>
+                <CircularProgress />
+              </Box>
+            )}
+          </Grid>
           <Typography variant="body2">{voteData.description}</Typography>
           <hr style={{ borderColor: "black", borderWidth: "0.5px" }}></hr>
           <List>
@@ -91,10 +110,16 @@ function Voting() {
                       voteData.id
                     ) ? (
                       <Button
-                        style={{ marginLeft: "1rem", backgroundColor: "black" }}
+                        style={{
+                          marginLeft: "3rem",
+                          backgroundColor: voted ? "gray" : "black",
+                          cursor: voted ? "not-allowed" : "pointer",
+                        }}
                         variant="contained"
-                        color="primary"
-                        onClick={() => handleVoting(id, option)}>
+                        onClick={() =>
+                          voted ? () => {} : handleVoting(id, option)
+                        }
+                      >
                         Vote
                       </Button>
                     ) : voteData.active ? null : (
@@ -113,7 +138,8 @@ function Voting() {
           style={{ backgroundColor: "white", color: "black", borderRadius: 10 }}
           variant="contained"
           color="primary"
-          onClick={handleBack}>
+          onClick={handleBack}
+        >
           Back to list
         </Button>
       </Grid>
