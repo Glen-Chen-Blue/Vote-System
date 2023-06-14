@@ -36,8 +36,10 @@ function CreateVote() {
       formData.append('endTime', endtime);
       const response = await axios.post('/api/createPoll', formData);
       console.log(response.data);
+      alert('create success')
     } catch (error) {
       console.error(error);
+      alert('create error')
     }
     navigate('/voting-list');
   };
