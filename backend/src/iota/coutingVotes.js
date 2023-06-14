@@ -35,20 +35,25 @@ async function coutingVotes(poll_ID) {
   const result = {};
   const choices = poll.options;
   let lastBlockID = poll.lastBlockID;
-  choices.map((choice) => (result[choice] = 0));
+  choices.forEach((choice) => (result[choice.option] = 0));
+  console.log("ALL CHOICE:", result);
   console.log(lastBlockID);
-  do {
+  while (lastBlockID !== 0) {
     const { blockID, choice } = await getVote(lastBlockID);
     while ((!blockID && blockID !== 0) || !choice) {
       let i = 1;
-      console.log(blockID, choice);
+      // console.log("stuck here", blockID, choice);
     }
     console.log("vote for: ", choice);
     result[choice] += 1;
     lastBlockID = blockID;
-  } while (lastBlockID !== 0);
+  }
   console.log("voting result:", result);
-  return result;
+  let countingResult = choices.map((choice) => {
+    choice.votes = result[choice.option];
+    return choice;
+  });
+  return countingResult;
 }
 // run().then(() => process.exit());
 
