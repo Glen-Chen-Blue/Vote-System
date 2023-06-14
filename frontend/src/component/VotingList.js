@@ -21,18 +21,48 @@ function VotingList() {
   const [value, setValue] = useState(0);
   const { setIsLogin, setVc, vc } = UseContext();
   const [pollList, setPollList] = useState([]);
+  const [pollListFilter, setPollListFilter] = useState([]);
   const currentTime = new Date();
   useEffect(() => {
     async function fetchData() {
       const response = await axios.get("/api/getAllPoll");
       setPollList(response.data);
+      setPollListFilter(
+        response.data.filter((vote) => {
+          // if (value === 3)
+          //   return currentTime > new Date(vote.endTime) && !vote.active;
+          if (value === 2) return currentTime > new Date(vote.endTime);
+          else if (value === 1)
+            return JSON.parse(vc).vc.credentialSubject.voted.includes(vote.id);
+          else
+            return (
+              currentTime < new Date(vote.endTime) &&
+              !JSON.parse(vc).vc.credentialSubject.voted.includes(vote.id)
+            );
+        })
+      );
       console.log(response.data);
     }
     fetchData();
   }, []);
 
   const handleChange = (event, newValue) => {
+    console.log(pollListFilter);
     setValue(newValue);
+    setPollListFilter(
+      pollList.filter((vote) => {
+        // if (value === 3)
+        //   return currentTime > new Date(vote.endTime) && !vote.active;
+        if (newValue === 2) return currentTime > new Date(vote.endTime);
+        else if (newValue === 1)
+          return JSON.parse(vc).vc.credentialSubject.voted.includes(vote.id);
+        else
+          return (
+            currentTime < new Date(vote.endTime) &&
+            !JSON.parse(vc).vc.credentialSubject.voted.includes(vote.id)
+          );
+      })
+    );
   };
 
   const handleCreate = () => {
@@ -107,22 +137,19 @@ function VotingList() {
         </Tabs>
       </Grid>
       <Grid item>
-        {pollList
-          .filter((vote) => {
-            // if (value === 3)
-            //   return currentTime > new Date(vote.endTime) && !vote.active;
-            if (value === 2) return currentTime > new Date(vote.endTime);
-            else if (value === 1)
-              return JSON.parse(vc).vc.credentialSubject.voted.includes(
-                vote.id
-              );
-            else
-              return (
-                currentTime < new Date(vote.endTime) &&
-                !JSON.parse(vc).vc.credentialSubject.voted.includes(vote.id)
-              );
-          })
-          .map((vote) => (
+        {pollListFilter.length === 0 ? (
+          <Typography
+            style={{
+              color: "white",
+              fontFamily: "Lobster",
+              fontSize: 50,
+              paddingTop: "5rem",
+            }}
+          >
+            None!
+          </Typography>
+        ) : (
+          pollListFilter.map((vote) => (
             <Paper
               key={vote.id}
               onClick={() => handleVoteClick(vote.id)}
@@ -180,7 +207,8 @@ function VotingList() {
                 End Time: {format(new Date(vote.endTime), "yyyy-MM-dd HH:mm")}
               </Typography>
             </Paper>
-          ))}
+          ))
+        )}
       </Grid>
     </Grid>
   );
