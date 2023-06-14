@@ -43,6 +43,7 @@ function Voting() {
     } else if (response === "error") {
       console.log("error");
     } else {
+      alert('vote success')
       setVc(JSON.stringify(response.data));
       navigate("/voting-list");
     }
