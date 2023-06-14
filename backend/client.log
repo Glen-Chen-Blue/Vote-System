@@ -1,0 +1,29 @@
+2023-06-12 07:52:09 (UTC) iota_client::node_manager::syncing         [94mDEBUG[0m sync_nodes
+2023-06-12 07:52:09 (UTC) reqwest::connect                           [94mDEBUG[0m starting new connection: https://api.testnet.shimmer.network/
+2023-06-12 07:52:09 (UTC) rustls::client::hs                         [94mDEBUG[0m No cached session for DnsName(DnsName(DnsName("api.testnet.shimmer.network")))
+2023-06-12 07:52:09 (UTC) rustls::client::hs                         [94mDEBUG[0m Not resuming any session
+2023-06-12 07:52:09 (UTC) rustls::client::hs                         [94mDEBUG[0m Using ciphersuite TLS13_AES_256_GCM_SHA384
+2023-06-12 07:52:09 (UTC) rustls::client::tls13                      [94mDEBUG[0m Not resuming
+2023-06-12 07:52:09 (UTC) rustls::client::tls13                      [94mDEBUG[0m TLS1.3 encrypted extensions: [ServerNameAck, Protocols([6832])]
+2023-06-12 07:52:09 (UTC) rustls::client::hs                         [94mDEBUG[0m ALPN protocol is Some(b"h2")
+2023-06-12 07:52:09 (UTC) rustls::client::tls13                      [94mDEBUG[0m Ticket saved
+2023-06-12 07:52:09 (UTC) rustls::client::tls13                      [94mDEBUG[0m Ticket saved
+2023-06-12 07:52:10 (UTC) iota_client::node_manager::http_client     [94mDEBUG[0m GET: 1126 ms for 200 OK https://api.testnet.shimmer.network/api/core/v2/info
+2023-06-12 07:52:10 (UTC) rustls::conn                               [94mDEBUG[0m Sending warning alert CloseNotify
+2023-06-12 07:52:10 (UTC) iota_client::message_interface::message_handler [94mDEBUG[0m Message: GenerateMnemonic
+2023-06-12 07:52:10 (UTC) iota_client::message_interface::message_handler [94mDEBUG[0m Response: GeneratedMnemonic(<omitted>)
+2023-06-12 07:52:10 (UTC) iota_client::message_interface::message_handler [94mDEBUG[0m Response: BuildAndPostBlock{ secret_manager: <omitted>, options: Some(ClientBlockBuilderOptions { coin_type: None, account_index: None, initial_address_index: None, inputs: None, input_range: None, output: None, output_hex: None, outputs: None, custom_remainder_address: None, tag: Some("0x48656c6c6f"), data: Some("0x54616e676c65"), parents: None, allow_burning: None }) }
+2023-06-12 07:52:10 (UTC) reqwest::connect                           [94mDEBUG[0m starting new connection: https://api.testnet.shimmer.network/
+2023-06-12 07:52:10 (UTC) rustls::client::hs                         [94mDEBUG[0m No cached session for DnsName(DnsName(DnsName("api.testnet.shimmer.network")))
+2023-06-12 07:52:10 (UTC) rustls::client::hs                         [94mDEBUG[0m Not resuming any session
+2023-06-12 07:52:10 (UTC) rustls::client::hs                         [94mDEBUG[0m Using ciphersuite TLS13_AES_256_GCM_SHA384
+2023-06-12 07:52:10 (UTC) rustls::client::tls13                      [94mDEBUG[0m Not resuming
+2023-06-12 07:52:10 (UTC) rustls::client::tls13                      [94mDEBUG[0m TLS1.3 encrypted extensions: [ServerNameAck, Protocols([6832])]
+2023-06-12 07:52:10 (UTC) rustls::client::hs                         [94mDEBUG[0m ALPN protocol is Some(b"h2")
+2023-06-12 07:52:10 (UTC) rustls::client::tls13                      [94mDEBUG[0m Ticket saved
+2023-06-12 07:52:10 (UTC) rustls::client::tls13                      [94mDEBUG[0m Ticket saved
+2023-06-12 07:52:11 (UTC) iota_client::node_manager::http_client     [94mDEBUG[0m GET: 1119 ms for 200 OK https://api.testnet.shimmer.network/api/core/v2/tips
+2023-06-12 07:52:12 (UTC) iota_client::message_interface::message_handler [94mDEBUG[0m Response: BlockIdWithBlock(BlockId(0x127bb836a7a27ec89d50c4cfbdd44173203a7ff9b7e763f52f8369b269c2dbb8), BlockDto { protocol_version: 2, parents: ["0x241a570e4868b11772801898dc1a403f4e3fac3f5b6724a3ab0ef4262c25d38e", "0x5a6def243f81409e5e64f71e40735760d6a237cb041133b5d66fbe33f422d569", "0xda27388074f6e0123ad53a2b1304c8d74a924524423fc453d6e21f51e45bb8e5", "0xf235a6923319dc2afd011f11de080154872f2c5435860879d026825d9be39282"], payload: Some(TaggedData(TaggedDataPayloadDto { kind: 5, tag: "0x48656c6c6f", data: "0x54616e676c65" })), nonce: "16140901064495922634" })
+2023-06-12 07:52:12 (UTC) iota_client::message_interface::message_handler [94mDEBUG[0m Message: GetBlock { block_id: BlockId(0x127bb836a7a27ec89d50c4cfbdd44173203a7ff9b7e763f52f8369b269c2dbb8) }
+2023-06-12 07:52:12 (UTC) iota_client::node_manager::http_client     [94mDEBUG[0m GET: 320 ms for 200 OK https://api.testnet.shimmer.network/api/core/v2/blocks/0x127bb836a7a27ec89d50c4cfbdd44173203a7ff9b7e763f52f8369b269c2dbb8
+2023-06-12 07:52:12 (UTC) iota_client::message_interface::message_handler [94mDEBUG[0m Response: Block(BlockDto { protocol_version: 2, parents: ["0x241a570e4868b11772801898dc1a403f4e3fac3f5b6724a3ab0ef4262c25d38e", "0x5a6def243f81409e5e64f71e40735760d6a237cb041133b5d66fbe33f422d569", "0xda27388074f6e0123ad53a2b1304c8d74a924524423fc453d6e21f51e45bb8e5", "0xf235a6923319dc2afd011f11de080154872f2c5435860879d026825d9be39282"], payload: Some(TaggedData(TaggedDataPayloadDto { kind: 5, tag: "0x48656c6c6f", data: "0x54616e676c65" })), nonce: "16140901064495922634" })

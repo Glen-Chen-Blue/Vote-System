@@ -2,12 +2,32 @@ import React, { useState } from 'react';
 import { Button, TextField, Box, Paper, Typography, Grid, IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import axios from 'axios';
+import { UseContext } from '../hook/useStatus';
+axios.defaults.baseURL = 'http://localhost:4000';
 
 function CreateVote() {
   const navigate = useNavigate();
-  const [options, setOptions] = useState([""]);
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [endtime, setEndtime] = useState('');
+  const [options, setOptions] = useState(['']);
+  const { setVc, setIsLogin } = UseContext();
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
+    console.log(title, content, options, endtime);
+    try {
+      let formData = new FormData();
+      formData.append('title', title);
+      formData.append('description', content);
+      formData.append('options', JSON.stringify(options));
+      formData.append('endTime', endtime);
+      const response = await axios.post('/api/createPoll', formData);
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
     navigate('/voting-list');
   };
 
@@ -16,11 +36,17 @@ function CreateVote() {
   };
 
   const handleLogout = () => {
+    setIsLogin(0);
+    setVc('');
     navigate('/');
   };
 
   const handleAddOption = () => {
-    setOptions([...options, ""]);
+    setOptions([...options, '']);
+  };
+
+  const handleRemoveOption = (index) => {
+    setOptions(options.filter((_, optionIndex) => optionIndex !== index));
   };
 
   const handleOptionChange = (event, index) => {
@@ -36,25 +62,47 @@ function CreateVote() {
           Logout
         </Button>
         <Button variant="contained" color="primary" onClick={handleCancel}>
-            Back to list
+          Back to list
         </Button>
       </Grid>
       <Grid item>
         <Paper sx={{ p: 2, width: '90vw' }}>
           <Typography variant="h6">Create New Vote</Typography>
           <Box mt={2}>
-            <TextField fullWidth label="Vote Title" variant="outlined" />
-            <TextField fullWidth label="Vote Content" variant="outlined" multiline sx={{ mt: 2 }}/>
+            <TextField
+              fullWidth
+              label="Vote Title"
+              variant="outlined"
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+            />
+            <TextField
+              fullWidth
+              label="Vote Content"
+              variant="outlined"
+              multiline
+              sx={{ mt: 2 }}
+              value={content}
+              onChange={(event) => setContent(event.target.value)}
+            />
             {options.map((option, index) => (
-              <TextField
-                fullWidth
-                key={index}
-                label={`Option ${index + 1}`}
-                variant="outlined"
-                value={option}
-                onChange={(event) => handleOptionChange(event, index)}
-                sx={{ mt: 2 }}
-              />
+              <Box display="flex" alignItems="center" sx={{ mt: 2 }} key={index}>
+                <TextField
+                  fullWidth
+                  label={`Option ${index + 1}`}
+                  variant="outlined"
+                  value={option}
+                  onChange={(event) => handleOptionChange(event, index)}
+                />
+                <IconButton
+                  color="secondary"
+                  onClick={() => handleRemoveOption(index)}
+                  disabled={options.length === 1}
+                  sx={{ ml: 2 }}
+                >
+                  <RemoveCircleOutlineIcon />
+                </IconButton>
+              </Box>
             ))}
             <IconButton color="primary" onClick={handleAddOption}>
               <AddCircleOutlineIcon />
@@ -68,6 +116,8 @@ function CreateVote() {
                 shrink: true,
               }}
               sx={{ mt: 2 }}
+              value={endtime}
+              onChange={(event) => setEndtime(event.target.value)}
             />
             <Box mt={2}>
               <Button variant="contained" color="primary" onClick={handleCreate}>
