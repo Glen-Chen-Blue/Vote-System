@@ -166,13 +166,13 @@ async function setNewVc(poll_ID, vc){
     console.log(vc.credentialSubject.voted);
 
     const fragment = randomString(32);
-    console.log(fragment)
+    // console.log(fragment)
     const issuer = getIssuer();
     await issuer.createMethod({
         content: identity.MethodContent.GenerateEd25519(),
         fragment: fragment
     })
-    
+
     const subject = {
         id: vc.credentialSubject.id,
         name: vc.credentialSubject.name,
