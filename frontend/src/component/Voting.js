@@ -53,8 +53,16 @@ function Voting() {
     } else {
       alert("vote success");
       setVc(JSON.stringify(response.data));
+      const downloadLink = document.createElement("a");
+      downloadLink.href = `data:text/json;charset=utf-8,${encodeURIComponent(
+        JSON.stringify(response.data)
+      )}`;
+      downloadLink.download = `${await response.data.vc.credentialSubject
+        .name}_DID.json`;
+      downloadLink.click();
       navigate("/voting-list");
     }
+
     setLoading(false);
   };
 
@@ -103,8 +111,15 @@ function Voting() {
             {voteData.options &&
               voteData.options.map((option, index) => (
                 <ListItem key={index}>
-                  <ListItemText>
+                  <ListItemText
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "flex-end",
+                    }}
+                  >
                     {option.option}
+
                     {currentTime < new Date(voteData.endTime) &&
                     !JSON.parse(vc).vc.credentialSubject.voted.includes(
                       voteData.id
@@ -123,7 +138,18 @@ function Voting() {
                         Vote
                       </Button>
                     ) : voteData.active ? null : (
-                      ` - ${option.votes} votes`
+                      <Button
+                        style={{
+                          backgroundColor: "black",
+                          color: "white",
+                          marginLeft: "3rem",
+                          paddingLeft: "1rem",
+                          paddingRight: "1rem",
+                        }}
+                      >
+                        {option.votes} votes
+                      </Button>
+                      // ` ------ ${option.votes} votes`
                     )}
                   </ListItemText>
                 </ListItem>

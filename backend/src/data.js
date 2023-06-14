@@ -7,7 +7,7 @@ let polls = [
     description: "Choose next year's EE Department President",
     options: [
       { option: "TSAI", votes: 97 },
-      { option: "LEE", votes: 103 },
+      { option: "LEE", votes: 101 },
     ],
     active: false,
     endTime: "2023-05-24T19:00",
