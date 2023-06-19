@@ -1,4 +1,5 @@
 import coutingVotes from "./iota/coutingVotes";
+import { Client, hexToUtf8, initLogger, utf8ToHex } from "@iota/client";
 
 let polls = [
   {
@@ -11,7 +12,8 @@ let polls = [
     ],
     active: false,
     endTime: "2023-05-24T19:00",
-    lastBlockID: 0,
+    lastBlockID:
+      "0xaed0ce4bc922cbc306d587f0be2b5154d50cd17fb96cc5410174522d2af4316a",
   },
 ];
 
@@ -33,9 +35,7 @@ function createPoll(title, description, options, endTime) {
     lastBlockID: 0,
   };
   polls.push(newPoll);
-  console.log(polls);
   if (new Date(latestEnd.latestTime) > new Date(endTime)) {
-    console.log("LATER");
     latestEnd = {
       latestID: newPoll.id,
       latestTime: endTime,
@@ -81,6 +81,41 @@ function initializeLatest() {
   console.log("next open:", latestEnd.latestID);
 }
 
+async function archivePoll(poll_ID) {
+  // initLogger();
+  const poll = getPoll(poll_ID);
+  if (!process.env.NODE_URL) {
+    throw new Error(".env NODE_URL is undefined, see .env.example");
+  }
+
+  const client = new Client({
+    // Insert your node URL in the .env.
+    nodes: [process.env.NODE_URL],
+  });
+
+  const data = utf8ToHex(JSON.stringify(poll));
+  const options = {
+    // tag: utf8ToHex("TEST web VOTING"),
+    tag: utf8ToHex(Math.random().toString()),
+    data,
+  };
+
+  try {
+    const mnemonic = await client.generateMnemonic();
+    const secretManager = { mnemonic: mnemonic };
+
+    // Create block with tagged payload
+    const blockIdAndBlock = await client.buildAndPostBlock(
+      secretManager,
+      options
+    );
+    modifyLastID(poll_ID, blockIdAndBlock[0]);
+  } catch (error) {
+    console.error("Error: ", error);
+  }
+  return "success";
+}
+
 async function endPoll() {
   // while (true) {
   //   console.log("currentTime:", new Date());
@@ -100,17 +135,18 @@ async function endPoll() {
       }
       return d;
     });
-    console.log(polls);
+    // console.log(polls);
     initializeLatest();
     console.log("end", poll_ID);
     let result = await coutingVotes(poll_ID);
     polls = polls.map((d) => {
       if (d.id === poll_ID) {
         d.options = result;
-        d.active = false;
       }
       return d;
     });
+    archivePoll(poll_ID);
+
     console.log(poll_ID, getPoll(poll_ID).options);
   }
   // await sleep(1000);

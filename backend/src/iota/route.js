@@ -41,7 +41,11 @@ router.get("/api/getAllPoll", upload.none(), async (req, res) => {
 
 router.get("/api/getPoll/:id", upload.none(), async (req, res) => {
   const id = req.params.id;
-  const response = getPoll(id);
+  const poll = getPoll(id);
+  let response = poll;
+  if (response["active"]) {
+    response["lastBlockID"] = 0;
+  }
   res.json(response);
 });
 

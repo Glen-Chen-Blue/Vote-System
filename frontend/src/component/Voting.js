@@ -53,13 +53,13 @@ function Voting() {
     } else {
       alert("vote success");
       setVc(JSON.stringify(response.data));
-      const downloadLink = document.createElement("a");
-      downloadLink.href = `data:text/json;charset=utf-8,${encodeURIComponent(
-        JSON.stringify(response.data)
-      )}`;
-      downloadLink.download = `${await response.data.vc.credentialSubject
-        .name}_DID.json`;
-      downloadLink.click();
+      // const downloadLink = document.createElement("a");
+      // downloadLink.href = `data:text/json;charset=utf-8,${encodeURIComponent(
+      //   JSON.stringify(response.data)
+      // )}`;
+      // downloadLink.download = `${await response.data.vc.credentialSubject
+      //   .name}_DID.json`;
+      // downloadLink.click();
       navigate("/voting-list");
     }
 
@@ -157,6 +157,11 @@ function Voting() {
           </List>
           <hr style={{ borderColor: "black", borderWidth: "0.5px" }}></hr>
           <Typography variant="body2">End Time: {formattedTime}</Typography>
+          {voteData.active ? null : (
+            <Typography variant="body2">
+              Find on IOTA: {voteData.lastBlockID}
+            </Typography>
+          )}
         </Paper>
       </Grid>
       <Grid style={{ padding: "3rem" }} item>

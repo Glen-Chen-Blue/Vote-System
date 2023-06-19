@@ -206,6 +206,9 @@ function VotingList() {
               <Typography variant="body2">
                 End Time: {format(new Date(vote.endTime), "yyyy-MM-dd HH:mm")}
               </Typography>
+              <Typography variant="body2">
+                Find on IOTA: {vote.lastBlockID}
+              </Typography>
             </Paper>
           ))
         )}

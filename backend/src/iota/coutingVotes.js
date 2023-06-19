@@ -30,14 +30,42 @@ async function getVote(lastBlockID) {
   }
 }
 
+async function getPollBlock(lastBlockID) {
+  if (!process.env.NODE_URL) {
+    throw new Error(".env NODE_URL is undefined, see .env.example");
+  }
+
+  const client = new Client({
+    // Insert your node URL in the .env.
+    nodes: [process.env.NODE_URL],
+  });
+
+  try {
+    // console.log("getBlock: ", lastBlockID);
+
+    const fetchedBlock = await client.getBlock(lastBlockID);
+    // console.log("Block data: ", lastBlockID);
+
+    const payload = fetchedBlock.payload;
+    if (payload && "data" in payload && payload.data) {
+      const ans = JSON.parse(hexToUtf8(payload.data));
+      // console.log("Decoded data:", ans.vote);
+      // console.log(ans);
+      return { blockID: ans.lastBlockID, choice: 0 };
+    }
+  } catch (error) {
+    console.error("Error: ", error);
+  }
+}
 async function coutingVotes(poll_ID) {
   const poll = getPoll(poll_ID);
   const result = {};
   const choices = poll.options;
   let lastBlockID = poll.lastBlockID;
   choices.forEach((choice) => (result[choice.option] = 0));
-  console.log("ALL CHOICE:", result);
-  console.log(lastBlockID);
+  // console.log("ALL CHOICE:", result);
+  // console.log(lastBlockID);
+
   while (lastBlockID !== 0) {
     const { blockID, choice } = await getVote(lastBlockID);
     while ((!blockID && blockID !== 0) || !choice) {

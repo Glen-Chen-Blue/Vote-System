@@ -16,7 +16,7 @@ import {
 
 // import { Tag } from "@iota/core";
 require("dotenv").config({ path: "../.env" });
-async function testVoting() {
+async function VotingAddData() {
   let poll_ID = createPoll(
     "DESSERT",
     "Which dessert below do you like the most?",
@@ -71,6 +71,9 @@ app.use(express.json());
 app.use("/", router);
 
 async function startServer() {
+  await VotingAddData();
+  initializeLatest();
+  console.log("Data init finshed");
   await createIssuer();
   const issuer = getIssuer();
   console.log(issuer);
@@ -78,10 +81,8 @@ async function startServer() {
   app.listen(port, () => {
     console.log(`Server is up on port ${port}.`);
   });
-  initializeLatest();
   setInterval(() => {
     endPoll();
   }, 1000);
-  testVoting();
 }
 startServer();
