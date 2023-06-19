@@ -105,7 +105,7 @@ function Voting() {
               </Box>
             )}
           </Grid>
-          <Typography variant="body2">{voteData.description}</Typography>
+          <Typography variant="body2" style={{ fontWeight: "600" }}>{voteData.description}</Typography>
           <hr style={{ borderColor: "black", borderWidth: "0.5px" }}></hr>
           <List>
             {voteData.options &&
