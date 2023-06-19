@@ -156,9 +156,9 @@ function Voting() {
               ))}
           </List>
           <hr style={{ borderColor: "black", borderWidth: "0.5px" }}></hr>
-          <Typography variant="body2">End Time: {formattedTime}</Typography>
+          <Typography variant="body2" style={{ paddingLeft: 7 }}>End Time: {formattedTime}</Typography>
           {voteData.active ? null : (
-            <Typography variant="body2">
+            <Typography variant="body2" style={{ padding: 7, paddingTop: 5, paddingBottom: 5, backgroundColor: "rgb(200,200,200)", marginTop: 5, borderRadius: 10, fontWeight: "600" }}>
               Find on IOTA: {voteData.lastBlockID}
             </Typography>
           )}

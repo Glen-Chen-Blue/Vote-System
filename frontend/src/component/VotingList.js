@@ -10,6 +10,7 @@ import {
   ListItem,
   ListItemText,
   Grid,
+  Box,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { UseContext } from "../hook/useStatus";
@@ -190,25 +191,27 @@ function VotingList() {
                   </Typography>
                 )}
               </Grid>
-              <Typography variant="body2">{vote.description}</Typography>
+              <Typography variant="body2" style={{ fontWeight: "600" }}>{vote.description}</Typography>
               <hr style={{ borderColor: "black", borderWidth: "0.5px" }}></hr>
               <List>
                 {vote.options.map((option, index) => (
                   <ListItem key={index}>
                     <ListItemText>
                       {option.option}
-                      {vote.active ? "" : ":" + option.votes}
+                      {vote.active ? "" : " : " + option.votes}
                     </ListItemText>
                   </ListItem>
                 ))}
               </List>
               <hr style={{ borderColor: "black", borderWidth: "0.5px" }}></hr>
-              <Typography variant="body2">
+              <Typography variant="body2" style={{ paddingLeft: 7 }}>
                 End Time: {format(new Date(vote.endTime), "yyyy-MM-dd HH:mm")}
               </Typography>
-              <Typography variant="body2">
-                Find on IOTA: {vote.lastBlockID}
-              </Typography>
+              {vote.active ? null : (
+                <Typography variant="body2" style={{ padding: 7, paddingTop: 5, paddingBottom: 5, backgroundColor: "rgb(200,200,200)", marginTop: 5, borderRadius: 10, fontWeight: "600" }}>
+                  Find on IOTA: {vote.lastBlockID}
+                </Typography>
+              )}
             </Paper>
           ))
         )}
